@@ -1,0 +1,31 @@
+.wa-float {
+  position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+  width: 60px; height: 60px; border-radius: 50%;
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 24px rgba(37,211,102,.5);
+  animation: pulse-ring 2.5s ease infinite;
+  transition: all .3s ease;
+}
+.wa-float:hover { transform: scale(1.1); box-shadow: 0 10px 32px rgba(37,211,102,.65); }
+.wa-icon { width: 30px; height: 30px; }
+
+.wa-tooltip {
+  position: absolute; right: 72px; top: 50%; transform: translateY(-50%);
+  background: #0a1628; color: #fff;
+  font-size: .8rem; font-weight: 700; white-space: nowrap;
+  padding: 8px 14px; border-radius: 8px;
+  opacity: 0; pointer-events: none; transition: opacity .25s;
+}
+.wa-tooltip::after {
+  content: ''; position: absolute; left: 100%; top: 50%; transform: translateY(-50%);
+  border: 6px solid transparent; border-left-color: #0a1628;
+}
+.wa-float:hover .wa-tooltip, .wa-float.hovered .wa-tooltip { opacity: 1; }
+
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(37,211,102,.55); }
+  70%  { box-shadow: 0 0 0 14px rgba(37,211,102,0); }
+  100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
+}

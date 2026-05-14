@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy-950: #050d1a;
+  --navy-900: #0a1628;
+  --navy-800: #0f2040;
+  --navy-700: #162d56;
+  --navy-600: #1e3a6e;
+  --navy-500: #1e4d8c;
+  --blue-400: #3b82f6;
+  --blue-300: #60a5fa;
+  --accent: #f59e0b;
+  --accent-light: #fbbf24;
+  --green: #10b981;
+  --white: #ffffff;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-400: #94a3b8;
+  --gray-600: #475569;
+  --gray-800: #1e293b;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.1);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,.15);
+  --shadow-xl: 0 20px 60px rgba(0,0,0,.2);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 32px;
+  --transition: all .3s cubic-bezier(.4,0,.2,1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--text-primary);
+  background: var(--white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+ul { list-style: none; }
+
+/* ── UTILITY ── */
+.container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.section { padding: 96px 0; }
+.section-sm { padding: 64px 0; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(59,130,246,.12); color: var(--blue-400);
+  font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(59,130,246,.25);
+  margin-bottom: 16px;
+}
+
+.section-header { text-align: center; margin-bottom: 64px; }
+.section-header h2 {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 800; color: var(--navy-900); line-height: 1.2; margin-bottom: 16px;
+}
+.section-header p { font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; border-radius: var(--radius-sm);
+  font-weight: 700; font-size: .95rem; cursor: pointer;
+  border: none; transition: var(--transition); white-space: nowrap;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--blue-400), var(--navy-600));
+  color: var(--white);
+  box-shadow: 0 4px 20px rgba(59,130,246,.4);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(59,130,246,.5); }
+.btn-accent {
+  background: linear-gradient(135deg, var(--accent), #ef4444);
+  color: var(--white);
+  box-shadow: 0 4px 20px rgba(245,158,11,.35);
+}
+.btn-accent:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(245,158,11,.45); }
+.btn-outline {
+  background: transparent; color: var(--white);
+  border: 2px solid rgba(255,255,255,.4);
+}
+.btn-outline:hover { background: rgba(255,255,255,.1); border-color: var(--white); }
+
+/* ── CARD ── */
+.card {
+  background: var(--white); border-radius: var(--radius-lg);
+  padding: 32px; box-shadow: var(--shadow-md);
+  border: 1px solid var(--gray-100);
+  transition: var(--transition);
+}
+.card:hover { transform: translateY(-6px); box-shadow: var(--shadow-xl); }
+
+/* ── GRADIENT TEXT ── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--blue-300), var(--accent-light));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+/* ── PAGE HERO ── */
+.page-hero {
+  background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-700) 60%, var(--navy-600) 100%);
+  padding: 120px 0 80px; text-align: center; position: relative; overflow: hidden;
+}
+.page-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(59,130,246,.25) 0%, transparent 70%);
+}
+.page-hero .container { position: relative; z-index: 1; }
+.page-hero h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: var(--white); margin-bottom: 12px; }
+.page-hero p { color: rgba(255,255,255,.7); font-size: 1.1rem; }
+
+/* ── DIVIDER ── */
+.divider { width: 64px; height: 4px; border-radius: 99px; margin: 0 auto 20px; }
+.divider-left { margin: 0 0 20px; }
+.divider-blue { background: linear-gradient(90deg, var(--blue-400), var(--blue-300)); }
+.divider-accent { background: linear-gradient(90deg, var(--accent), var(--accent-light)); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--gray-100); }
+::-webkit-scrollbar-thumb { background: var(--navy-600); border-radius: 99px; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-12px); }
+}
+@keyframes pulse-ring {
+  0%   { transform: scale(.95); box-shadow: 0 0 0 0 rgba(34,197,94,.5); }
+  70%  { transform: scale(1);   box-shadow: 0 0 0 12px rgba(34,197,94,0); }
+  100% { transform: scale(.95); box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+}
+
+.animate-fadeInUp { animation: fadeInUp .7s ease both; }
+.animate-float    { animation: float 4s ease-in-out infinite; }
+
+/* ── RESPONSIVE GRID ── */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+
+@media (max-width: 1024px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .section { padding: 64px 0; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .section-header { margin-bottom: 40px; }
+}
+@media (max-width: 480px) {
+  .container { padding: 0 16px; }
+}
