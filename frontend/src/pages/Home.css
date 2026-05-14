@@ -324,22 +324,22 @@
   display: flex; width: max-content;
 }
 .marquee-content {
-  display: flex; align-items: center; gap: 80px; padding-right: 80px;
+  display: flex; align-items: center; gap: 64px; padding-right: 64px;
   animation: scrollMarquee 40s linear infinite;
 }
 .marquee-track:hover .marquee-content {
   animation-play-state: paused;
 }
-.client-logo {
-  font-size: 1.5rem; font-weight: 800; color: #94a3b8;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  text-transform: uppercase; letter-spacing: -0.5px;
-  transition: all 0.3s ease; white-space: nowrap; cursor: default;
+.marquee-logo-img {
+  height: 80px;
+  width: auto;
+  max-width: 240px;
+  object-fit: contain;
+  transition: all 0.3s ease;
   filter: grayscale(100%) opacity(0.6);
 }
-.client-logo:hover {
+.marquee-logo-img:hover {
   filter: grayscale(0%) opacity(1);
-  color: #1e3a6e;
   transform: scale(1.05);
 }
 
@@ -348,25 +348,51 @@
   100% { transform: translateX(-100%); }
 }
 
-/* ── TESTIMONIALS ── */
-.testi-section { background: #f8fafc; }
-.testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
-.testi-card {
-  background: #fff; border-radius: 20px; padding: 32px;
-  border: 1px solid #e2e8f0; transition: all .3s;
+/* ── TESTIMONIALS SLIDESHOW ── */
+.testi-section { background: #f8fafc; overflow: hidden; }
+.testi-slider-container {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 10px 0 30px;
 }
-.testi-card:hover { box-shadow: 0 16px 40px rgba(0,0,0,.1); transform: translateY(-4px); }
-.testi-stars { display: flex; gap: 4px; margin-bottom: 16px; }
-.testi-text { color: #475569; font-size: .95rem; line-height: 1.7; margin-bottom: 24px; font-style: italic; }
-.testi-author { display: flex; align-items: center; gap: 12px; }
+.testi-slider-track {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.testi-slide {
+  min-width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+.testi-card {
+  background: #fff; border-radius: 20px; padding: 40px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 12px 32px rgba(0,0,0,.05);
+}
+.testi-stars { display: flex; gap: 4px; margin-bottom: 24px; }
+.testi-text { color: #475569; font-size: 1.1rem; line-height: 1.8; margin-bottom: 32px; font-style: italic; }
+.testi-author { display: flex; align-items: center; gap: 16px; }
 .testi-avatar {
-  width: 44px; height: 44px; border-radius: 50%;
+  width: 48px; height: 48px; border-radius: 50%;
   background: linear-gradient(135deg, #3b82f6, #1e3a6e);
   color: #fff; font-weight: 800; font-size: 1.1rem;
   display: flex; align-items: center; justify-content: center;
 }
-.testi-name { font-weight: 700; color: #0f172a; font-size: .95rem; }
-.testi-company { font-size: .8rem; color: #94a3b8; }
+.testi-name { font-weight: 700; color: #0f172a; font-size: 1rem; }
+.testi-company { font-size: .85rem; color: #94a3b8; }
+
+.testi-dots {
+  display: flex; justify-content: center; gap: 8px; margin-top: 24px;
+}
+.testi-dot {
+  width: 12px; height: 12px; border-radius: 50%; background: #cbd5e1; border: none;
+  cursor: pointer; transition: all 0.3s; padding: 0; outline: none;
+}
+.testi-dot.active {
+  background: #3b82f6; transform: scale(1.3);
+}
 
 /* ── HUBUNGI KAMI ── */
 .home-contact-section {

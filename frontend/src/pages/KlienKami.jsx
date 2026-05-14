@@ -3,18 +3,30 @@ import { Star, Building2, Quote } from 'lucide-react';
 import './KlienKami.css';
 
 const clients = [
-  { name: 'PT. Berkah Abadi', initials: 'BA', industry: 'Manufaktur' },
-  { name: 'CV. Maju Jaya', initials: 'MJ', industry: 'Perdagangan' },
-  { name: 'Klinik Sehat Bersama', initials: 'KS', industry: 'Kesehatan' },
-  { name: 'Toko Elektronik Mega', initials: 'TE', industry: 'Retail' },
-  { name: 'UD. Karya Mandiri', initials: 'KM', industry: 'Konstruksi' },
-  { name: 'Apotek Sehat Prima', initials: 'AS', industry: 'Kesehatan' },
-  { name: 'Restoran Nusantara', initials: 'RN', industry: 'Kuliner' },
-  { name: 'PT. Indo Digital', initials: 'ID', industry: 'Teknologi' },
-  { name: 'SMK Bina Karya', initials: 'BK', industry: 'Pendidikan' },
-  { name: 'Hotel Bintang Tiga', initials: 'HB', industry: 'Hospitality' },
-  { name: 'Laundry Express Bekasi', initials: 'LE', industry: 'UMKM' },
-  { name: 'Kantor Notaris Wijaya', initials: 'KN', industry: 'Hukum' },
+  { name: 'PT. Toyota Indonesia', logo: '/clients/Toyota.png', industry: 'Manufaktur' },
+  { name: 'MNC Group', logo: '/clients/MNC.png', industry: 'Media & Telekomunikasi' },
+  { name: 'PT. PLN (Persero)', logo: '/clients/PLN.png', industry: 'Energi' },
+  { name: 'PT. Pertamina', logo: '/clients/pertamina.png', industry: 'Energi' },
+  { name: 'PT. Epson Indonesia', logo: '/clients/epson.png', industry: 'Teknologi' },
+  { name: 'PT. Yamaha Indonesia', logo: '/clients/yamaha.png', industry: 'Otomotif' },
+  { name: 'PT. Pos Indonesia', logo: '/clients/pos.png', industry: 'Logistik' },
+  { name: 'PT. INKA (Persero)', logo: '/clients/inka.png', industry: 'Manufaktur' },
+  { name: 'Telkom Indonesia', logo: '/clients/telkom.png', industry: 'Telekomunikasi' },
+  { name: 'Siloam Hospitals', logo: '/clients/siloam.png', industry: 'Kesehatan' },
+  { name: 'WIKA', logo: '/clients/wika.png', industry: 'Konstruksi' },
+  { name: 'Wings Group', logo: '/clients/wings.png', industry: 'FMCG' },
+  { name: 'Wyndham Hotels', logo: '/clients/wyndham.png', industry: 'Hospitality' },
+  { name: 'Tamansari Hive', logo: '/clients/tamansari.png', industry: 'Properti' },
+  { name: 'PT. Pertani', logo: '/clients/Pertani.png', industry: 'Agrikultur' },
+  { name: 'DIKA', logo: '/clients/dika.png', industry: 'Konsultan' },
+  { name: 'BW', logo: '/clients/BW.png', industry: 'Konsultan' },
+  { name: 'Yayasan', logo: '/clients/yayasan.png', industry: 'Pendidikan/Sosial' },
+  { name: 'Umroh & Haji', logo: '/clients/umroh.png', industry: 'Travel' },
+  { name: 'Mangkuluhur', logo: '/clients/mangkuluhur.png', industry: 'Properti' },
+  { name: 'Reka', logo: '/clients/reka.png', industry: 'Desain & Konstruksi' },
+  { name: 'Intrama', logo: '/clients/intrama.png', industry: 'Perdagangan' },
+  { name: 'Promisco', logo: '/clients/promisco.png', industry: 'Retail' },
+  { name: 'Adi Upaya', logo: '/clients/adi upaya.png', industry: 'Layanan' },
 ];
 
 const testimonials = [
@@ -76,10 +88,10 @@ export default function KlienKami() {
             <p>Dari UMKM hingga perusahaan menengah, kami hadir untuk semua.</p>
           </div>
           <div className="clients-grid">
-            {clients.map(({ name, initials, industry }, i) => (
+            {clients.map(({ name, logo, industry }) => (
               <div className="client-card reveal" key={name}>
-                <div className="client-logo" style={{ background: `${colors[i % colors.length]}18`, border: `1px solid ${colors[i % colors.length]}30` }}>
-                  <span style={{ color: colors[i % colors.length] }}>{initials}</span>
+                <div className="client-logo-img">
+                  <img src={logo} alt={`Logo ${name}`} />
                 </div>
                 <div className="client-info">
                   <h4>{name}</h4>

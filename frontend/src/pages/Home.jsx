@@ -67,15 +67,18 @@ const whyUs = [
 ];
 
 const testimonials = [
-  { name: 'Budi Santoso', company: 'CV. Maju Jaya', rating: 5, text: 'Pelayanan sangat cepat dan profesional. Laptop saya yang rusak berhasil diperbaiki dalam 2 jam. Sangat rekomendasikan!' },
-  { name: 'Siti Rahayu', company: 'Toko Online Siti', rating: 5, text: 'Instalasi CCTV di toko saya dikerjakan dengan rapi dan bersih. Harga terjangkau, kualitas premium. Terima kasih IT Support!' },
-  { name: 'Ahmad Fauzi', company: 'PT. Berkah Abadi', rating: 5, text: 'Kami sudah menggunakan jasa IT Support Jabodetabek untuk maintenance kantor selama 3 tahun. Sangat puas dengan pelayanannya.' },
+  { name: 'Argi Anto', company: 'Local Guide', rating: 5, text: 'Dan akhirnya laptop saya kembali normal. Abangnya sangat komunikatif. Harga bersahabat, dan yang terpenting hasil pengerjaannya jelas. Tidak ragu perbaiki laptop disini. Mantap…' },
+  { name: 'Marta Olina', company: 'Local Guide', rating: 5, text: 'Terima kasih banyak sudah membantu saya menyelesaikan masalah pekerjaan saya dengan cepat, efektif dan efisien alias gercep.. Mantabb sukses selalu buat IT support team' },
+  { name: 'Mas Khusaini', company: 'Local Guide', rating: 5, text: 'Terimakasih banyak atas bantuannya. Pelayanan service komputernya bagus, terpercaya dan ownernya ramah.' },
+  { name: 'Nick Janthio', company: 'Local Guide', rating: 5, text: 'Masnya ramah sekali, langsung mengerjakan yang penting kita sebagai customer menjelaskan bagian apa yang problem. Jasa beliau sangat pas di kantong pelajar.' },
+  { name: 'Monika Astari', company: 'Local Guide', rating: 5, text: 'Support yang diberikan luar biasa bagus. Amat sangat cepat respondnya. Laptop saya selesai diperbaiki tepat waktu. Sparepart yang rusak diganti dengan yang asli dan bergaransi. Sukses terus ya IT Support Jabodetabek👍' },
 ];
 
 const clientLogos = [
-  "Wika Realty", "Epson", "Toyota Indonesia", "Pos Indonesia",
-  "Telkom Indonesia", "Yamaha", "Pertamina", "PLN", "Siloam Hospitals",
-  "MNC Group", "INKA", "Wyndham", "Tamansari Hive"
+  "/clients/Toyota.png", "/clients/MNC.png", "/clients/PLN.png",
+  "/clients/pertamina.png", "/clients/epson.png", "/clients/yamaha.png",
+  "/clients/pos.png", "/clients/inka.png", "/clients/telkom.png",
+  "/clients/siloam.png", "/clients/wika.png", "/clients/wings.png"
 ];
 
 const contactInfo = [
@@ -89,6 +92,7 @@ export default function Home() {
   const statsRef = useRef(null);
   const [currentHeroImage, setCurrentHeroImage] = useState(0);
   const [currentBgImage, setCurrentBgImage] = useState(0);
+  const [currentTesti, setCurrentTesti] = useState(0);
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -127,9 +131,14 @@ export default function Home() {
       setCurrentBgImage((prev) => (prev + 1) % bgPhotos.length);
     }, 5000); // Ganti background setiap 5 detik
 
+    const testiTimer = setInterval(() => {
+      setCurrentTesti((prev) => (prev + 1) % 5);
+    }, 6000);
+
     return () => {
       clearInterval(slideTimer);
       clearInterval(bgTimer);
+      clearInterval(testiTimer);
     };
   }, []);
 
@@ -314,48 +323,62 @@ export default function Home() {
           <div className="marquee-track">
             <div className="marquee-content">
               {clientLogos.map((client, i) => (
-                <div className="client-logo" key={`a-${i}`}>
-                  {client}
-                </div>
+                <img key={`a-${i}`} src={client} className="marquee-logo-img" alt="Client Logo" />
               ))}
             </div>
             <div className="marquee-content" aria-hidden="true">
               {clientLogos.map((client, i) => (
-                <div className="client-logo" key={`b-${i}`}>
-                  {client}
-                </div>
+                <img key={`b-${i}`} src={client} className="marquee-logo-img" alt="Client Logo" />
               ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ── */}
+      {/* ── TESTIMONIALS SLIDESHOW ── */}
       <section className="section testi-section">
         <div className="container">
           <div className="section-header reveal">
-            <div className="badge">Testimoni</div>
+            <div className="badge">Testimoni Google Maps</div>
             <h2>Apa Kata Klien Kami?</h2>
-            <p>Kepercayaan klien adalah prioritas utama kami. Lihat apa yang mereka katakan.</p>
+            <p>Kepercayaan klien adalah prioritas utama kami. Lihat ulasan asli pelanggan kami.</p>
           </div>
-          <div className="testi-grid">
-            {testimonials.map(({ name, company, rating, text }) => (
-              <div className="testi-card reveal" key={name}>
-                <div className="testi-stars">
-                  {Array.from({ length: rating }).map((_, i) => (
-                    <Star key={i} size={16} fill="#f59e0b" color="#f59e0b" />
-                  ))}
-                </div>
-                <p className="testi-text">"{text}"</p>
-                <div className="testi-author">
-                  <div className="testi-avatar">{name[0]}</div>
-                  <div>
-                    <div className="testi-name">{name}</div>
-                    <div className="testi-company">{company}</div>
+          <div className="testi-slider-container reveal">
+            <div 
+              className="testi-slider-track"
+              style={{ transform: `translateX(-${currentTesti * 100}%)` }}
+            >
+              {testimonials.map(({ name, company, rating, text }, idx) => (
+                <div className="testi-slide" key={idx}>
+                  <div className="testi-card">
+                    <div className="testi-stars">
+                      {Array.from({ length: rating }).map((_, i) => (
+                        <Star key={i} size={18} fill="#f59e0b" color="#f59e0b" />
+                      ))}
+                    </div>
+                    <p className="testi-text">"{text}"</p>
+                    <div className="testi-author">
+                      <div className="testi-avatar">{name[0]}</div>
+                      <div>
+                        <div className="testi-name">{name}</div>
+                        <div className="testi-company">{company}</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            
+            <div className="testi-dots">
+              {testimonials.map((_, idx) => (
+                <button 
+                  key={idx} 
+                  className={`testi-dot ${idx === currentTesti ? 'active' : ''}`}
+                  onClick={() => setCurrentTesti(idx)}
+                  aria-label={`Go to slide ${idx + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
