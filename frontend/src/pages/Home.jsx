@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   Laptop, Network, ShieldCheck, Code2, Settings2, Lightbulb,
   CheckCircle, ArrowRight, Star, Clock, Shield, Zap, MapPin, ExternalLink,
-  Phone, Mail, Send
+  Phone, Mail, Send, Target
 } from 'lucide-react';
 import './Home.css';
 
@@ -112,7 +112,11 @@ export default function Home() {
     '/home-page/3.png',
     '/home-page/4.png',
     '/home-page/5.png',
-    '/home-page/6.png'
+    '/home-page/6.png',
+    '/home-page/7.png',
+    '/home-page/8.png',
+    '/home-page/9.png',
+    '/home-page/10.png'
   ];
 
   const bgPhotos = [
@@ -176,7 +180,6 @@ export default function Home() {
         </div>
         <div className="container hero-content">
           <div className="hero-text">
-            <div className="badge">🚀 Fast Response IT Support</div>
             <h1 className="hero-title">
               Solusi IT <span className="gradient-text">Profesional</span><br />
               Untuk Bisnis Anda
@@ -211,10 +214,47 @@ export default function Home() {
                 />
               ))}
               <div className="hero-image-overlay"></div>
+              
+              <div className="hero-caption-wrapper">
+                {[
+                  { title: "Visi Kami", text: "Menjadi penyedia layanan IT terkemuka di Jabodetabek dengan keunggulan teknis." },
+                  { title: "Misi Kami", text: "Menghadirkan solusi teknologi efektif untuk mendorong kemajuan bisnis Anda." },
+                  { title: "Dukungan 24/7", text: "Memastikan kelancaran operasional melalui penanganan IT yang proaktif." },
+                  { title: "Transformasi Digital", text: "Mendukung keamanan data dengan infrastruktur IT yang modern." },
+                  { title: "Kemitraan Jangka Panjang", text: "Layanan andal yang selalu berfokus pada kebutuhan pelanggan." },
+                  { title: "Keunggulan Teknis", text: "Menghadirkan inovasi dan standar kualitas tinggi di setiap layanan." },
+                  { title: "Solusi Inovatif", text: "Mengubah setiap tantangan operasional menjadi keunggulan bisnis." },
+                  { title: "Layanan Terpadu", text: "Penanganan Hardware, Network, dan Security dalam satu atap." },
+                  { title: "Teknisi Profesional", text: "Tim bersertifikasi dan berpengalaman untuk hasil yang maksimal." },
+                  { title: "Berorientasi Klien", text: "Kepercayaan dan kepuasan Anda adalah prioritas utama kami." }
+                ].map((item, index) => (
+                  <div 
+                    key={index}
+                    className={`hero-caption ${index === currentHeroImage ? 'active' : ''}`}
+                  >
+                    <div className="caption-icon-wrapper">
+                      <Target size={20} />
+                    </div>
+                    <div className="caption-text-content">
+                      <h4>{item.title}</h4>
+                      <p>{item.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="hero-badge-1"><CheckCircle size={16} /><span>Bergaransi</span></div>
-            <div className="hero-badge-2"><Star size={16} /><span>4.9 Rating</span></div>
-            <div className="hero-badge-3"><Zap size={16} /><span>Fast Response</span></div>
+
+            {/* Slide Indicator Dots */}
+            <div className="hero-slide-dots">
+              {heroPhotos.map((_, index) => (
+                <button
+                  key={index}
+                  className={`hero-dot ${index === currentHeroImage ? 'active' : ''}`}
+                  onClick={() => setCurrentHeroImage(index)}
+                  aria-label={`Slide ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -233,77 +273,92 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── SERVICES ── */}
-      <section className="section svc-section">
+      {/* ── SERVICES (Bento Grid) ── */}
+      <section className="section bento-section">
         <div className="container">
-          <div className="svc-header reveal">
-            <div className="svc-header-left">
-              <span className="svc-eyebrow">Layanan Kami</span>
-              <h2 className="svc-title">Apa yang Kami<br /><span className="gradient-text">Tawarkan?</span></h2>
-            </div>
-            <div className="svc-header-right">
-              <p className="svc-subtitle">Berbagai layanan IT profesional untuk memastikan bisnis Anda berjalan tanpa hambatan teknologi.</p>
-              <Link to="/layanan-kami" className="btn btn-primary svc-all-btn">
-                Semua Layanan <ArrowRight size={16} />
-              </Link>
-            </div>
+          <div className="bento-section-header reveal">
+            <h2 className="section-title-premium">
+              Infrastruktur IT yang<br />
+              <span className="gradient-text">Mendukung Pertumbuhan</span>
+            </h2>
+            <p className="section-subtitle-premium">
+              Layanan komprehensif yang dirancang untuk memastikan operasional bisnis Anda berjalan mulus tanpa hambatan teknologi.
+            </p>
           </div>
 
-          <div className="svc-grid">
-            {services.map(({ num, icon, tag, title, desc, img, color }) => (
-              <Link to="/layanan-kami" className="svc-card reveal" key={title} style={{ '--svc-color': color }}>
-                {/* Image section */}
-                <div className="svc-card-image-wrap">
-                  <div className="svc-card-bg" style={{ backgroundImage: `url(${img})` }} />
-                  <div className="svc-card-overlay" />
-                  <div className="svc-card-top">
-                    <span className="svc-num">{num}</span>
-                    <span className="svc-tag">{tag}</span>
-                  </div>
-                </div>
+          <div className="bento-grid">
+            {services.map(({ icon, tag, title, desc, color, img }, idx) => {
+              // Create dynamic bento layout based on index
+              let cardClass = "bento-card bento-standard reveal";
+              if (idx === 0) cardClass = "bento-card bento-large reveal"; // Service Laptop & PC
+              if (idx === 1) cardClass = "bento-card bento-wide reveal"; // Instalasi Jaringan
+              if (idx === 4) cardClass = "bento-card bento-wide reveal"; // Maintenance IT
+              if (idx === 5) cardClass = "bento-card bento-wide reveal"; // Konsultasi IT
 
-                {/* Content section */}
-                <div className="svc-card-content">
-                  <div className="svc-icon-wrap">
-                    <span style={{ color }}>{icon}</span>
+              return (
+                <Link to="/layanan-kami" className={cardClass} key={title} style={{ '--bento-accent': color }}>
+                  {/* Subtle radial gradient background */}
+                  <div className="bento-glow" />
+                  
+                  {/* Permanent Background Image */}
+                  <div className="bento-image-bg" style={{ backgroundImage: `url(${img})` }} />
+                  <div className="bento-overlay" />
+                  
+                  <div className="bento-card-inner">
+                    <div className="bento-top">
+                      <div className="bento-icon-wrapper">
+                        {icon}
+                      </div>
+                      <span className="bento-badge">{tag}</span>
+                    </div>
+                    
+                    <div className="bento-bottom">
+                      <h3 className="bento-title">{title}</h3>
+                      <p className="bento-desc">{desc}</p>
+                      
+                      <div className="bento-link">
+                        <span>Eksplorasi Layanan</span>
+                        <ArrowRight size={16} />
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="svc-name">{title}</h3>
-                  <p className="svc-desc">{desc}</p>
-                  <div className="svc-cta">
-                    <span>Pelajari Lebih Lanjut</span>
-                    <ArrowRight size={16} />
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ── WHY US ── */}
-      <section className="why-section section">
+      {/* ── WHY US (Asymmetric Layout) ── */}
+      <section className="section premium-why-section">
         <div className="container">
-          <div className="why-inner">
-            <div className="why-text reveal">
-              <div className="badge" style={{ background: 'rgba(245,158,11,.12)', color: '#f59e0b', borderColor: 'rgba(245,158,11,.25)' }}>
-                Mengapa Kami?
-              </div>
-              <h2>Kepercayaan yang Telah Kami Bangun Selama 7+ Tahun</h2>
-              <p>
-                Kami bukan sekadar penyedia layanan IT. Kami adalah mitra teknologi yang
-                berkomitmen untuk mendukung pertumbuhan bisnis Anda dengan solusi yang tepat,
-                cepat, dan terpercaya.
+          <div className="premium-why-grid">
+            <div className="premium-why-content reveal">
+              <div className="subtle-badge">Nilai Kami</div>
+              <h2 className="premium-heading">Standar Baru dalam <span className="gradient-text">Dukungan IT</span></h2>
+              <p className="premium-paragraph">
+                Bukan sekadar perbaikan, kami membangun infrastruktur yang tangguh. Dengan pengalaman lebih dari 7 tahun, kami menghadirkan metodologi presisi yang mengubah masalah teknis menjadi keunggulan operasional Anda.
               </p>
-              <Link to="/tentang-kami" className="btn btn-primary" style={{ marginTop: '24px', display: 'inline-flex' }}>
-                Tentang Kami <ArrowRight size={18} />
+              
+              <ul className="premium-feature-list">
+                <li><CheckCircle size={20} className="check-accent"/> <span>SLA Respons di bawah 60 menit</span></li>
+                <li><CheckCircle size={20} className="check-accent"/> <span>Transparansi diagnosa & biaya</span></li>
+                <li><CheckCircle size={20} className="check-accent"/> <span>Teknisi tersertifikasi</span></li>
+              </ul>
+              
+              <Link to="/tentang-kami" className="premium-btn mt-6">
+                Mengenal Tim Kami
               </Link>
             </div>
-            <div className="why-grid">
-              {whyUs.map(({ icon, title, desc }) => (
-                <div className="why-card reveal" key={title}>
-                  <div className="why-icon">{icon}</div>
-                  <h4>{title}</h4>
-                  <p>{desc}</p>
+            
+            <div className="premium-why-cards">
+              {whyUs.map(({ icon, title, desc }, i) => (
+                <div className={`premium-feature-card reveal delay-${i}`} key={title}>
+                  <div className="premium-feature-icon">{icon}</div>
+                  <div className="premium-feature-text">
+                    <h4>{title}</h4>
+                    <p>{desc}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -339,45 +394,45 @@ export default function Home() {
       <section className="section testi-section">
         <div className="container">
           <div className="section-header reveal">
-            <div className="badge">Testimoni Google Maps</div>
+            <div className="badge">Testimoni</div>
             <h2>Apa Kata Klien Kami?</h2>
             <p>Kepercayaan klien adalah prioritas utama kami. Lihat ulasan asli pelanggan kami.</p>
           </div>
-          <div className="testi-slider-container reveal">
-            <div 
-              className="testi-slider-track"
-              style={{ transform: `translateX(-${currentTesti * 100}%)` }}
-            >
-              {testimonials.map(({ name, company, rating, text }, idx) => (
-                <div className="testi-slide" key={idx}>
-                  <div className="testi-card">
-                    <div className="testi-stars">
-                      {Array.from({ length: rating }).map((_, i) => (
-                        <Star key={i} size={18} fill="#f59e0b" color="#f59e0b" />
-                      ))}
+          <div className="testi-marquee-wrapper reveal">
+            <div className="testi-marquee-track">
+              {[...testimonials, ...testimonials].map(({ name, company, rating, text }, idx) => (
+                <div className="testi-card-clean" key={idx}>
+                <div className="testi-card-content">
+                  <div className="testi-header">
+                    <div className="testi-avatar-clean">
+                      <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=f1f5f9&color=3b82f6&size=100`} alt={name} />
                     </div>
-                    <p className="testi-text">"{text}"</p>
-                    <div className="testi-author">
-                      <div className="testi-avatar">{name[0]}</div>
-                      <div>
-                        <div className="testi-name">{name}</div>
-                        <div className="testi-company">{company}</div>
-                      </div>
+                    <div className="testi-meta">
+                      <div className="testi-name">{name}</div>
+                      <div className="testi-company">{company}</div>
+                    </div>
+                    <div className="testi-google-icon">
+                      {/* Google "G" Logo SVG */}
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                      </svg>
                     </div>
                   </div>
+                  <div className="testi-stars-row">
+                    <div className="testi-stars">
+                      {Array.from({ length: rating }).map((_, i) => (
+                        <Star key={i} size={16} fill="#fbbc04" color="#fbbc04" />
+                      ))}
+                    </div>
+                    <span className="testi-time">Beberapa bulan lalu</span>
+                  </div>
+                  <p className="testi-text">"{text}"</p>
                 </div>
-              ))}
-            </div>
-            
-            <div className="testi-dots">
-              {testimonials.map((_, idx) => (
-                <button 
-                  key={idx} 
-                  className={`testi-dot ${idx === currentTesti ? 'active' : ''}`}
-                  onClick={() => setCurrentTesti(idx)}
-                  aria-label={`Go to slide ${idx + 1}`}
-                />
-              ))}
+              </div>
+            ))}
             </div>
           </div>
         </div>

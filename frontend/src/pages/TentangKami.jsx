@@ -1,22 +1,50 @@
-import { useEffect } from 'react';
-import { Target, Eye, Heart, Users, Award, Clock } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Target, Eye, Heart, Users, Award, Clock, ChevronLeft, ChevronRight, CheckCircle, MapPin, Phone } from 'lucide-react';
 import './TentangKami.css';
 
 const values = [
-  { icon: <Award size={28} />, title: 'Profesionalisme', desc: 'Kami selalu mengutamakan standar kerja tertinggi di setiap proyek yang kami tangani.' },
-  { icon: <Heart size={28} />, title: 'Dedikasi', desc: 'Kepuasan klien adalah prioritas utama kami. Kami bekerja sepenuh hati untuk hasil terbaik.' },
-  { icon: <Users size={28} />, title: 'Kolaborasi', desc: 'Kami percaya bahwa kemitraan yang baik menghasilkan solusi yang lebih inovatif dan efektif.' },
-  { icon: <Clock size={28} />, title: 'Ketepatan Waktu', desc: 'Setiap komitmen dijaga dengan menyelesaikan pekerjaan sesuai tenggat waktu yang disepakati.' },
+  {
+    icon: <Award size={28} />,
+    title: 'Profesionalisme',
+    desc: 'Standar kerja tertinggi di setiap proyek yang kami tangani, tanpa terkecuali.',
+    color: '#3b82f6',
+  },
+  {
+    icon: <Heart size={28} />,
+    title: 'Dedikasi',
+    desc: 'Kepuasan klien adalah prioritas utama. Kami bekerja sepenuh hati untuk hasil terbaik.',
+    color: '#ef4444',
+  },
+  {
+    icon: <Users size={28} />,
+    title: 'Kolaborasi',
+    desc: 'Kemitraan yang baik menghasilkan solusi yang lebih inovatif dan efektif untuk Anda.',
+    color: '#10b981',
+  },
+  {
+    icon: <Clock size={28} />,
+    title: 'Ketepatan Waktu',
+    desc: 'Setiap komitmen kami jaga — pekerjaan selesai tepat sesuai tenggat yang disepakati.',
+    color: '#f59e0b',
+  },
 ];
 
-const team = [
-  { name: 'Ahmad Rizki', role: 'Lead Technician', initials: 'AR' },
-  { name: 'Budi Hartono', role: 'Network Engineer', initials: 'BH' },
-  { name: 'Citra Dewi', role: 'Web Developer', initials: 'CD' },
-  { name: 'Dian Pratama', role: 'CCTV Specialist', initials: 'DP' },
+const slidePhotos = [
+  { src: '/tim-img/1.png', caption: 'Tim kami saat melayani klien di lapangan' },
+  { src: '/tim-img/2.png', caption: 'Koordinasi dan diskusi bersama mitra bisnis' },
+];
+
+const highlights = [
+  { icon: <CheckCircle size={18} />, text: 'Berdiri sejak 2017' },
+  { icon: <CheckCircle size={18} />, text: 'Teknisi bersertifikat' },
+  { icon: <CheckCircle size={18} />, text: 'Layanan bergaransi' },
+  { icon: <MapPin size={18} />, text: 'Jabodetabek & sekitarnya' },
 ];
 
 export default function TentangKami() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
   useEffect(() => {
     document.title = 'Tentang Kami | IT Support Jabodetabek';
     const observer = new IntersectionObserver(
@@ -27,45 +55,116 @@ export default function TentangKami() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      changeSlide((currentSlide + 1) % slidePhotos.length);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [currentSlide]);
+
+  const changeSlide = (index) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentSlide(index);
+      setIsTransitioning(false);
+    }, 400);
+  };
+
+  const goToPrev = () => changeSlide((currentSlide - 1 + slidePhotos.length) % slidePhotos.length);
+  const goToNext = () => changeSlide((currentSlide + 1) % slidePhotos.length);
+
   return (
     <main>
-      <div className="page-hero">
+      {/* ── Page Hero ── */}
+      <div className="page-hero about-page-hero">
+        <div className="about-hero-bg-dots" />
         <div className="container">
           <div className="badge">Tentang Kami</div>
-          <h1>Mengenal IT Support Jabodetabek</h1>
-          <p>Mitra IT terpercaya Anda selama lebih dari 7 tahun</p>
+          <h1>Mengenal <span className="gradient-text">IT Support</span><br />Jabodetabek</h1>
+          <p>Mitra IT terpercaya yang hadir memberikan solusi nyata untuk bisnis Anda sejak 2017.</p>
         </div>
       </div>
 
-      {/* About Content */}
-      <section className="section">
+      {/* ── About: Siapa Kami ── */}
+      <section className="section about-main-section">
         <div className="container">
           <div className="about-grid">
+
+            {/* Left: Slideshow */}
             <div className="about-image-col reveal">
               <div className="about-image-wrapper">
-                <div className="about-img-placeholder">
-                  <Users size={80} className="about-placeholder-icon" />
-                  <span>Tim Profesional Kami</span>
+                <div className="about-slideshow">
+                  {slidePhotos.map((photo, index) => (
+                    <img
+                      key={index}
+                      src={photo.src}
+                      alt={photo.caption}
+                      className={`about-slide-img ${index === currentSlide ? 'active' : ''} ${isTransitioning ? 'transitioning' : ''}`}
+                    />
+                  ))}
+                  <div className="about-slide-overlay" />
+
+                  {/* Photo caption */}
+                  <div className={`about-photo-caption ${isTransitioning ? 'fading' : ''}`}>
+                    <span>{slidePhotos[currentSlide].caption}</span>
+                  </div>
+
+                  <button className="slide-nav slide-prev" onClick={goToPrev} aria-label="Sebelumnya">
+                    <ChevronLeft size={20} />
+                  </button>
+                  <button className="slide-nav slide-next" onClick={goToNext} aria-label="Berikutnya">
+                    <ChevronRight size={20} />
+                  </button>
+
+                  <div className="about-slide-dots">
+                    {slidePhotos.map((_, index) => (
+                      <button
+                        key={index}
+                        className={`about-dot ${index === currentSlide ? 'active' : ''}`}
+                        onClick={() => changeSlide(index)}
+                        aria-label={`Foto ${index + 1}`}
+                      />
+                    ))}
+                  </div>
                 </div>
+
+                {/* Floating badge */}
                 <div className="about-badge-exp">
                   <span className="exp-num">7+</span>
-                  <span className="exp-txt">Tahun Pengalaman</span>
+                  <span className="exp-txt">Tahun<br />Pengalaman</span>
                 </div>
               </div>
             </div>
+
+            {/* Right: Text */}
             <div className="about-text-col reveal">
               <div className="badge">Siapa Kami</div>
               <h2>IT Support Jabodetabek</h2>
               <div className="divider divider-left divider-blue" />
-              <p>
-                IT Support Jabodetabek adalah perusahaan penyedia layanan IT profesional yang berdiri sejak
-                2017 dan telah melayani ratusan klien dari berbagai segmen — mulai dari individu, UMKM,
-                hingga perusahaan skala menengah di area Jabodetabek.
+
+              <p className="about-lead">
+                Kami adalah perusahaan layanan IT profesional yang telah melayani ratusan klien
+                dari berbagai segmen bisnis — mulai dari individu, UMKM, hingga perusahaan
+                skala menengah di seluruh area Jabodetabek.
               </p>
-              <p style={{ marginTop: '16px' }}>
-                Dengan tim teknisi berpengalaman dan bersertifikat, kami berkomitmen untuk memberikan solusi
-                IT yang tepat, cepat, dan bergaransi. Kepercayaan klien adalah aset terbesar yang kami jaga.
+              <p className="about-body">
+                Dengan tim teknisi berpengalaman dan bersertifikat, kami berkomitmen memberikan
+                solusi IT yang tepat, cepat, dan bergaransi. Setiap klien diperlakukan sebagai
+                mitra jangka panjang, bukan sekadar transaksi biasa.
               </p>
+
+              {/* Highlights */}
+              <div className="about-highlights">
+                {highlights.map(({ icon, text }) => (
+                  <div className="about-highlight-item" key={text}>
+                    <span className="highlight-icon">{icon}</span>
+                    <span>{text}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Stats */}
               <div className="about-stats">
                 {[
                   { num: '500+', label: 'Klien Terlayani' },
@@ -83,16 +182,18 @@ export default function TentangKami() {
         </div>
       </section>
 
-      {/* Vision & Mission */}
+      {/* ── Vision & Mission ── */}
       <section className="section vm-section">
         <div className="container">
           <div className="section-header reveal">
-            <div className="badge">Visi & Misi</div>
+            <div className="badge">Visi &amp; Misi</div>
             <h2>Arah dan Tujuan Kami</h2>
+            <p>Landasan nilai yang mengarahkan setiap langkah dan keputusan bisnis kami.</p>
           </div>
           <div className="vm-grid">
             <div className="vm-card vm-vision reveal">
-              <div className="vm-icon"><Eye size={36} /></div>
+              <div className="vm-card-glow" />
+              <div className="vm-icon"><Eye size={32} /></div>
               <h3>Visi</h3>
               <p>
                 Menjadi perusahaan IT Support terdepan dan terpercaya di Indonesia yang memberikan
@@ -100,7 +201,8 @@ export default function TentangKami() {
               </p>
             </div>
             <div className="vm-card vm-mission reveal">
-              <div className="vm-icon"><Target size={36} /></div>
+              <div className="vm-card-glow vm-card-glow-blue" />
+              <div className="vm-icon"><Target size={32} /></div>
               <h3>Misi</h3>
               <ul className="vm-list">
                 <li>Memberikan layanan IT berkualitas tinggi dengan harga yang kompetitif dan terjangkau.</li>
@@ -113,44 +215,29 @@ export default function TentangKami() {
         </div>
       </section>
 
-      {/* Values */}
-      <section className="section">
+      {/* ── Values ── */}
+      <section className="section values-section">
         <div className="container">
           <div className="section-header reveal">
             <div className="badge">Nilai-Nilai Kami</div>
             <h2>Prinsip yang Menjadi Landasan Kami</h2>
+            <p>Empat pilar utama yang membentuk cara kami bekerja dan melayani setiap klien.</p>
           </div>
-          <div className="grid-4">
-            {values.map(({ icon, title, desc }) => (
-              <div className="value-card reveal" key={title}>
-                <div className="value-icon">{icon}</div>
+          <div className="values-grid">
+            {values.map(({ icon, title, desc, color }, i) => (
+              <div className="value-card reveal" key={title} style={{ '--accent': color, '--delay': `${i * 0.1}s` }}>
+                <div className="value-icon" style={{ background: `${color}18`, color }}>
+                  {icon}
+                </div>
                 <h4>{title}</h4>
                 <p>{desc}</p>
+                <div className="value-card-bar" style={{ background: color }} />
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Team */}
-      <section className="section team-section">
-        <div className="container">
-          <div className="section-header reveal">
-            <div className="badge">Tim Kami</div>
-            <h2>Bertemu dengan Tim Profesional Kami</h2>
-            <p>Para ahli berpengalaman yang siap membantu Anda 24/7.</p>
-          </div>
-          <div className="team-grid">
-            {team.map(({ name, role, initials }) => (
-              <div className="team-card reveal" key={name}>
-                <div className="team-avatar">{initials}</div>
-                <h4>{name}</h4>
-                <p>{role}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
     </main>
   );
 }
