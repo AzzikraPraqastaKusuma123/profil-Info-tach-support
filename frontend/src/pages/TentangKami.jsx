@@ -78,8 +78,13 @@ export default function TentangKami() {
     <main>
       {/* ── Page Hero ── */}
       <div className="page-hero about-page-hero">
+        {/* Background photo */}
+        <img src="/tim-img/1.png" alt="" className="about-hero-bg-img" />
+        {/* Dark overlay */}
+        <div className="about-hero-overlay" />
+        {/* Dot pattern on top */}
         <div className="about-hero-bg-dots" />
-        <div className="container">
+        <div className="container about-hero-content">
           <div className="badge">Tentang Kami</div>
           <h1>Mengenal <span className="gradient-text">IT Support</span><br />Jabodetabek</h1>
           <p>Mitra IT terpercaya yang hadir memberikan solusi nyata untuk bisnis Anda sejak 2017.</p>

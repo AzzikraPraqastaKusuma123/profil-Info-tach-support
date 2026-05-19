@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Monitor, Phone, Mail, MapPin, Share2, MessageCircle, Briefcase, ChevronRight } from 'lucide-react';
+import { Phone, Mail, MapPin, Share2, MessageCircle, Briefcase, ChevronRight } from 'lucide-react';
 import './Footer.css';
 
 const services = [
@@ -15,7 +15,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="footer-brand">
             <div className="footer-logo">
-              <div className="footer-logo-icon"><Monitor size={20} /></div>
+              <img src="/logo.png" alt="IT Support Jabodetabek Logo" className="footer-logo-img" />
               <div>
                 <div className="footer-logo-name">IT Support</div>
                 <div className="footer-logo-sub">Jabodetabek</div>

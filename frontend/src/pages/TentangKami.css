@@ -6,14 +6,51 @@
 .about-page-hero {
   position: relative;
   overflow: hidden;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
 }
+
+/* Static background photo */
+.about-hero-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  z-index: 0;
+}
+
+/* Dark gradient overlay */
+.about-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    135deg,
+    rgba(10, 22, 40, 0.82) 0%,
+    rgba(15, 32, 64, 0.75) 50%,
+    rgba(10, 22, 40, 0.88) 100%
+  );
+}
+
+/* Dot pattern on top */
 .about-hero-bg-dots {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  z-index: 2;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
   background-size: 28px 28px;
   pointer-events: none;
 }
+
+/* Content sits above everything */
+.about-hero-content {
+  position: relative;
+  z-index: 3;
+}
+
 .about-page-hero h1 { line-height: 1.15; }
 
 /* ── About Grid Layout ── */

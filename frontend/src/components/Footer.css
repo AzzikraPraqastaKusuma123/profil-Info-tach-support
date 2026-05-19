@@ -11,11 +11,11 @@
 
 /* Brand */
 .footer-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
-.footer-logo-icon {
-  width: 44px; height: 44px; border-radius: 10px;
-  background: linear-gradient(135deg, #3b82f6, #1e3a6e);
-  display: flex; align-items: center; justify-content: center;
-  color: #fff;
+.footer-logo-img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 8px;
 }
 .footer-logo-name { font-size: 1rem; font-weight: 800; color: #fff; line-height: 1.1; }
 .footer-logo-sub { font-size: .72rem; color: rgba(255,255,255,.45); font-weight: 500; }
