@@ -509,6 +509,10 @@
         document.getElementById('chat-empty-state').style.display = 'none';
         document.getElementById('chat-active-state').style.display = 'flex';
         
+        // Update URL parameter dynamically without refreshing
+        const newUrl = `${window.location.pathname}?session=${id}`;
+        window.history.replaceState({ path: newUrl }, '', newUrl);
+
         // Update active class in sidebar items
         document.querySelectorAll('.session-item').forEach(el => el.classList.remove('active'));
         renderSessions(); // Re-render to apply active class style
@@ -633,9 +637,8 @@
         }
     }
 
-    // Submit form handler to send message
-    document.getElementById('chat-send-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
+    // Helper to send message
+    async function sendMessage() {
         const inputField = document.getElementById('chat-message-input');
         const text = inputField.value.trim();
         if (!text || !activeSessionId) return;
@@ -672,13 +675,19 @@
         } catch (err) {
             console.error('Error sending message:', err);
         }
+    }
+
+    // Submit form handler to send message
+    document.getElementById('chat-send-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        sendMessage();
     });
 
     // Handle enter key on textarea to submit
     document.getElementById('chat-message-input').addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            document.getElementById('chat-send-form').dispatchEvent(new Event('submit'));
+            sendMessage();
         }
     });
 </script>
