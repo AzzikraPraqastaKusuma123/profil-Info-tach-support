@@ -133,6 +133,7 @@
         flex-direction: column;
         background: rgba(5, 13, 26, 0.2);
         position: relative;
+        min-height: 0;
     }
 
     .chat-pane-empty {
@@ -168,7 +169,8 @@
         display: flex;
         flex-direction: column;
         gap: 16px;
-    }
+        min-height: 0;
+     }
 
     .msg-bubble-wrapper {
         display: flex;
@@ -377,7 +379,7 @@
         </div>
 
         <!-- Active Chat State -->
-        <div style="display:none; flex-direction:column; height:100%;" id="chat-active-state">
+        <div style="display:none; flex-direction:column; height:100%; min-height:0;" id="chat-active-state">
             <div class="chat-header">
                 <div class="chat-user-details">
                     <div class="session-avatar" id="active-user-avatar">P</div>
