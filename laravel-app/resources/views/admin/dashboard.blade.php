@@ -286,6 +286,24 @@
     <p>Di sini Anda dapat mengelola seluruh konten website profil PT. ITS, mengunggah logo klien, memperbarui artikel informasi, dan mengambil alih obrolan chatbot interaktif dari pengunjung.</p>
 </div>
 
+<!-- ── Live Chat Alert Banner ── -->
+<div id="live-chat-alert-banner" class="glass-panel animate-fadeInUp" style="display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); margin-bottom: 32px; padding: 20px 24px; align-items: center; justify-content: space-between; gap: 16px; border-radius: var(--radius-md);">
+    <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="background: rgba(239, 68, 68, 0.15); width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3);">
+            <i data-lucide="bell" style="width: 22px; height: 22px; animation: float 3s ease-in-out infinite;"></i>
+        </div>
+        <div>
+            <h4 style="font-size: 1.05rem; font-weight: 700; color: #fca5a5; margin: 0 0 4px 0;">Notifikasi Chat Masuk</h4>
+            <p style="font-size: 0.9rem; color: var(--gray-300); margin: 0;" id="live-chat-alert-text">Ada pengunjung yang menunggu tanggapan Anda.</p>
+        </div>
+    </div>
+    <a href="/admin/chat" class="btn" style="background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; padding: 10px 20px; font-size: 0.85rem; border-radius: 8px; font-weight: 700; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); transition: var(--transition);">
+        <span>Balas Sekarang</span>
+        <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+    </a>
+</div>
+
+
 <!-- ── Metrics Grid ── -->
 <div class="metrics-grid">
     <!-- Services Metric -->
@@ -325,13 +343,11 @@
     <div class="metric-card metric-chats">
         <div class="metric-card-info">
             <h3>Chat Aktif</h3>
-            <div class="value">{{ $activeChatsCount }}</div>
+            <div class="value" id="dashboard-active-chats-value">{{ $activeChatsCount }}</div>
         </div>
         <div class="metric-icon-box">
             <i data-lucide="message-square" style="width: 24px; height: 24px;"></i>
-            @if($activeChatsCount > 0)
-                <div class="badge-pulse"></div>
-            @endif
+            <div class="badge-pulse" id="dashboard-active-chats-pulse" style="{{ $activeChatsCount > 0 ? '' : 'display: none;' }}"></div>
         </div>
     </div>
 </div>
@@ -429,4 +445,51 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    // Real-time notification check on Dashboard
+    async function checkDashboardPendingChats() {
+        try {
+            // Update notification banner and pending chats count
+            const res = await fetch('/admin/chat/pending-count');
+            if (res.ok) {
+                const data = await res.json();
+                const alertBanner = document.getElementById('live-chat-alert-banner');
+                const alertText = document.getElementById('live-chat-alert-text');
+                
+                if (alertBanner && alertText) {
+                    if (data.count > 0) {
+                        alertText.innerHTML = `Ada <b>${data.count}</b> sesi obrolan pengunjung yang sedang menunggu tanggapan Anda.`;
+                        alertBanner.style.display = 'flex';
+                    } else {
+                        alertBanner.style.display = 'none';
+                    }
+                }
+            }
+
+            // Also check total active sessions to keep metric card updated in real-time
+            const resSessions = await fetch('/admin/chat/sessions');
+            if (resSessions.ok) {
+                const sessions = await resSessions.json();
+                const activeCount = sessions.filter(s => s.is_active).length;
+                
+                const valueEl = document.getElementById('dashboard-active-chats-value');
+                const pulseEl = document.getElementById('dashboard-active-chats-pulse');
+                
+                if (valueEl) valueEl.textContent = activeCount;
+                if (pulseEl) {
+                    pulseEl.style.display = activeCount > 0 ? 'block' : 'none';
+                }
+            }
+        } catch (err) {
+            console.error('Error checking pending chats on dashboard:', err);
+        }
+    }
+
+    // Run initially and then check every 5 seconds
+    checkDashboardPendingChats();
+    setInterval(checkDashboardPendingChats, 5000);
+</script>
 @endsection
