@@ -79,6 +79,7 @@ class LiveChatController extends Controller
         $request->validate([
             'session_key' => 'required|string',
             'user_name' => 'nullable|string',
+            'auto_transfer' => 'nullable|boolean',
         ]);
 
         $session = ChatSession::firstOrCreate(
@@ -89,11 +90,16 @@ class LiveChatController extends Controller
         $session->is_active = true;
         $session->save();
 
+        $autoTransfer = $request->input('auto_transfer', false);
+        $promptMessage = $autoTransfer 
+            ? '[Dialihkan otomatis ke Live Chat - Bot tidak memahami pertanyaan]' 
+            : '[Meminta bantuan Live Chat Admin]';
+
         // Insert prompt message
         ChatMessage::create([
             'chat_session_id' => $session->id,
             'sender' => 'user',
-            'message' => '[Meminta bantuan Live Chat Admin]'
+            'message' => $promptMessage
         ]);
 
         ChatMessage::create([

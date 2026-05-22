@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     body.scrollTop = body.scrollHeight;
 
     const reply = getResponse(userText);
+    const isUnknown = reply.includes("Maaf, saya belum mengerti");
     
     // Typing delay simulation (minimum 700ms, up to 1800ms depending on query length)
     const delay = 700 + Math.min(userText.length * 8, 1100);
@@ -92,8 +93,20 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       // Remove typing bubble
       typingEl.remove();
-      // Append actual bot reply
-      appendMessage(reply, 'bot');
+      
+      if (isUnknown) {
+        // Show a custom transfer message to the user
+        const transferReply = "Maaf, saya tidak memahami pertanyaan Anda. Mengalihkan Anda langsung ke Admin Support kami...";
+        appendMessage(transferReply, 'bot');
+        
+        // Brief delay before triggering live chat takeover and sending the user text
+        setTimeout(() => {
+          startLiveChatDirect(userText, true);
+        }, 1200);
+      } else {
+        // Append actual bot reply
+        appendMessage(reply, 'bot');
+      }
     }, delay);
   }
 
@@ -261,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function startLiveChatDirect(userMessageText) {
+  function startLiveChatDirect(userMessageText, autoTransfer = false) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     
     // Show typing/connecting indicator
@@ -279,7 +292,8 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       body: JSON.stringify({
         session_key: SESSION_KEY,
-        user_name: 'Pengunjung #' + SESSION_KEY.substr(-5)
+        user_name: 'Pengunjung #' + SESSION_KEY.substr(-5),
+        auto_transfer: autoTransfer
       })
     })
     .then(res => res.json())
