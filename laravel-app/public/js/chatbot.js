@@ -7,21 +7,54 @@ document.addEventListener('DOMContentLoaded', () => {
   const sendBtn = document.getElementById('chat-send');
   const widgetContainer = document.getElementById('chat-widget');
   const unreadBadge = document.querySelector('.wa-badge');
+  const quickContainer = document.getElementById('chat-quick');
 
-  // Basic sanity checks and fallbacks
+  // Basic sanity checks
   if (!toggleBtn) console.warn('chatbot: toggle button not found (id=chat-toggle)');
   if (!panel) console.warn('chatbot: chat panel not found (id=chat-panel)');
   if (!body) console.warn('chatbot: chat body not found (id=chat-body)');
   if (!input) console.warn('chatbot: chat input not found (id=chat-input)');
   if (!sendBtn) console.warn('chatbot: chat send button not found (id=chat-send)');
 
+  // Session identification
+  const SESSION_KEY = getOrCreateSessionKey();
+  let isLiveChat = false;
+  let lastMessageIds = new Set();
+  let pollInterval = null;
+
+  function getOrCreateSessionKey() {
+    let key = localStorage.getItem('its_chat_session_key');
+    if (!key) {
+      key = 'session_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+      localStorage.setItem('its_chat_session_key', key);
+    }
+    return key;
+  }
+
   // Helper to append chat messages
   function appendMessage(text, who = 'bot') {
     if (!body) return;
-    const el = document.createElement('div');
-    el.className = 'chat-msg ' + who;
     
-    if (who === 'bot') {
+    // Check if we are appending a system message (bot / admin status change)
+    const isSystemMsg = who === 'bot' && (text.includes('diambil alih oleh Admin') || text.includes('diakhiri oleh Admin'));
+    
+    const el = document.createElement('div');
+    if (isSystemMsg) {
+      el.className = 'chat-msg bot system-notice';
+      el.style.alignSelf = 'center';
+      el.style.background = 'rgba(255, 255, 255, 0.05)';
+      el.style.border = '1px dashed rgba(255, 255, 255, 0.15)';
+      el.style.borderRadius = '8px';
+      el.style.fontSize = '0.78rem';
+      el.style.color = 'var(--gray-400)';
+      el.style.textAlign = 'center';
+      el.style.maxWidth = '95%';
+      el.style.padding = '6px 12px';
+    } else {
+      el.className = 'chat-msg ' + who;
+    }
+    
+    if (who === 'bot' || isSystemMsg) {
       el.innerHTML = text;
     } else {
       el.textContent = text;
@@ -124,20 +157,18 @@ document.addEventListener('DOMContentLoaded', () => {
       return "Sama-sama! Senang sekali bisa membantu Anda. Jika butuh bantuan perbaikan IT lainnya, hubungi kami kapan saja! 💻✨";
     }
     
-    return "Maaf, saya belum mengerti pertanyaan tersebut. Coba tanyakan topik dasar seperti 'layanan', 'alamat', atau langsung diskusikan dengan tim CS kami:<br>" +
-           "<a href='https://wa.me/6281210874692' target='_blank' class='chat-wa-inline-btn'><i data-lucide='phone'></i> Chat dengan CS Manusia</a>";
+    return "Maaf, saya belum mengerti pertanyaan tersebut. Coba tanyakan topik dasar seperti 'layanan', 'alamat', atau klik tombol <b>Hubungi Admin</b> di bawah untuk chat langsung dengan tim Support kami.";
   }
 
   // DYNAMIC SUGGESTIONS
-  const quickContainer = document.getElementById('chat-quick');
-  const defaultQuick = ['layanan', 'alamat', 'jam operasional', 'cara pesan', 'kontak'];
+  const defaultQuick = ['layanan', 'alamat', 'jam operasional', 'Hubungi Admin', 'kontak'];
 
   const suggestionsMap = {
-    services: ['cara pesan', 'alamat', 'kontak'],
-    location: ['jam operasional', 'layanan', 'kontak'],
-    hours: ['alamat', 'layanan', 'kontak'],
-    contact: ['layanan', 'cara pesan'],
-    greeting: ['layanan', 'alamat', 'kontak'],
+    services: ['cara pesan', 'alamat', 'Hubungi Admin', 'kontak'],
+    location: ['jam operasional', 'layanan', 'Hubungi Admin', 'kontak'],
+    hours: ['alamat', 'layanan', 'Hubungi Admin', 'kontak'],
+    contact: ['layanan', 'Hubungi Admin', 'cara pesan'],
+    greeting: ['layanan', 'alamat', 'Hubungi Admin', 'kontak'],
     unknown: defaultQuick
   };
 
@@ -172,18 +203,236 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         const query = q;
-        appendMessage(query, 'user');
-        setTimeout(() => {
-          botReply(query);
-          updateSuggestionsForText(query);
-        }, 10);
+        if (query.toLowerCase() === 'hubungi admin') {
+          startLiveChat();
+        } else {
+          appendMessage(query, 'user');
+          setTimeout(() => {
+            botReply(query);
+            updateSuggestionsForText(query);
+          }, 10);
+        }
       });
       
       quickContainer.appendChild(btn);
     });
   }
 
-  // OPEN & CLOSE PANEL
+  // ==========================================
+  // LIVE CHAT REDIRECT & POLLING LOGIC
+  // ==========================================
+
+  function startLiveChat() {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    
+    // Show typing/connecting indicator
+    const typingEl = document.createElement('div');
+    typingEl.className = 'chat-msg bot typing';
+    typingEl.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+    body.appendChild(typingEl);
+    body.scrollTop = body.scrollHeight;
+
+    fetch('/api/chat/takeover', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': csrfToken
+      },
+      body: JSON.stringify({
+        session_key: SESSION_KEY,
+        user_name: 'Pengunjung #' + SESSION_KEY.substr(-5)
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      typingEl.remove();
+      isLiveChat = true;
+      
+      if (quickContainer) quickContainer.style.display = 'none';
+      
+      updateHeaderStatus(true);
+      fetchNewMessages();
+      startPolling();
+    })
+    .catch(err => {
+      typingEl.remove();
+      console.error('Error starting live chat:', err);
+      appendMessage('Gagal menghubungkan ke live chat. Silakan coba lagi nanti atau hubungi via WhatsApp.', 'bot');
+    });
+  }
+
+  function startLiveChatDirect(userMessageText) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    
+    // Show typing/connecting indicator
+    const typingEl = document.createElement('div');
+    typingEl.className = 'chat-msg bot typing';
+    typingEl.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+    body.appendChild(typingEl);
+    body.scrollTop = body.scrollHeight;
+
+    fetch('/api/chat/takeover', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': csrfToken
+      },
+      body: JSON.stringify({
+        session_key: SESSION_KEY,
+        user_name: 'Pengunjung #' + SESSION_KEY.substr(-5)
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      typingEl.remove();
+      isLiveChat = true;
+      
+      if (quickContainer) quickContainer.style.display = 'none';
+      
+      updateHeaderStatus(true);
+      
+      // Save the message they typed directly to admin chat list
+      sendUserMessageToAdmin(userMessageText, true);
+      
+      startPolling();
+    })
+    .catch(err => {
+      typingEl.remove();
+      console.error('Error starting live chat:', err);
+      appendMessage('Gagal menghubungkan ke live chat. Silakan coba lagi nanti atau hubungi via WhatsApp.', 'bot');
+    });
+  }
+
+  function sendUserMessageToAdmin(messageText, skipAppending = false) {
+    if (!skipAppending) {
+      appendMessage(messageText, 'user');
+    }
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    fetch('/api/chat/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': csrfToken
+      },
+      body: JSON.stringify({
+        session_key: SESSION_KEY,
+        message: messageText
+      })
+    })
+    .then(res => res.json())
+    .then(msg => {
+      if (msg.id) {
+        lastMessageIds.add(msg.id);
+      }
+      // Instantly query back to get messages
+      fetchNewMessages();
+    })
+    .catch(err => {
+      console.error('Error sending message to admin:', err);
+    });
+  }
+
+  function fetchNewMessages() {
+    fetch(`/api/chat/messages?session_key=${SESSION_KEY}`)
+      .then(res => res.json())
+      .then(data => {
+        isLiveChat = data.is_active;
+        updateHeaderStatus(isLiveChat);
+
+        if (quickContainer) {
+          quickContainer.style.display = isLiveChat ? 'none' : 'flex';
+        }
+
+        let hasNew = false;
+        data.messages.forEach(msg => {
+          if (!lastMessageIds.has(msg.id)) {
+            lastMessageIds.add(msg.id);
+            // Append message. If sender is 'user', append as 'user'. If sender is 'admin' or 'bot', append as 'bot'
+            appendMessage(msg.message, msg.sender === 'user' ? 'user' : 'bot');
+            hasNew = true;
+          }
+        });
+
+        if (!isLiveChat) {
+          stopPolling();
+        }
+      })
+      .catch(err => console.error('Error polling chat messages:', err));
+  }
+
+  function syncSession() {
+    fetch(`/api/chat/messages?session_key=${SESSION_KEY}`)
+      .then(res => res.json())
+      .then(data => {
+        isLiveChat = data.is_active;
+        updateHeaderStatus(isLiveChat);
+
+        if (quickContainer) {
+          quickContainer.style.display = isLiveChat ? 'none' : 'flex';
+        }
+
+        if (data.messages && data.messages.length > 0) {
+          if (body) body.innerHTML = ''; // Clear fallback messages
+          data.messages.forEach(msg => {
+            lastMessageIds.add(msg.id);
+            appendMessage(msg.message, msg.sender === 'user' ? 'user' : 'bot');
+          });
+
+          if (isLiveChat) {
+            startPolling();
+          } else {
+            renderQuickReplies();
+          }
+        } else {
+          // Empty chat history, show welcome
+          if (body && body.children.length === 0) {
+            appendMessage('Halo! Selamat datang di <b>IT Support Jabodetabek</b>. Saya asisten virtual PT.ITS. Ada yang bisa saya bantu hari ini? Silakan ketik pesan atau pilih topik cepat di bawah.', 'bot');
+          }
+          renderQuickReplies();
+        }
+      })
+      .catch(err => {
+        console.error('Error syncing chat session:', err);
+        if (body && body.children.length === 0) {
+          appendMessage('Halo! Selamat datang di <b>IT Support Jabodetabek</b>. Saya asisten virtual PT.ITS. Ada yang bisa saya bantu hari ini? Silakan ketik pesan atau pilih topik cepat di bawah.', 'bot');
+        }
+        renderQuickReplies();
+      });
+  }
+
+  function updateHeaderStatus(active) {
+    const statusSub = document.querySelector('.chat-bot-sub');
+    const botName = document.querySelector('.chat-bot-name');
+    if (statusSub && botName) {
+      if (active) {
+        botName.textContent = 'Admin Support PT.ITS';
+        statusSub.textContent = 'Terhubung · Live Chat';
+        statusSub.style.color = '#3b82f6';
+      } else {
+        botName.textContent = 'Asisten IT Support';
+        statusSub.textContent = 'Online · CS PT.ITS';
+        statusSub.style.color = '#25d366';
+      }
+    }
+  }
+
+  function startPolling() {
+    if (pollInterval) clearInterval(pollInterval);
+    pollInterval = setInterval(fetchNewMessages, 4000);
+  }
+
+  function stopPolling() {
+    if (pollInterval) {
+      clearInterval(pollInterval);
+      pollInterval = null;
+    }
+  }
+
+  // ==========================================
+  // PANEL OPEN/CLOSE & INTERACTION LISTENERS
+  // ==========================================
+
   function openPanel() {
     if (!panel || !toggleBtn) return;
     panel.setAttribute('aria-hidden', 'false');
@@ -194,20 +443,18 @@ document.addEventListener('DOMContentLoaded', () => {
       unreadBadge.style.display = 'none';
     }
     
-    // Render first bot welcome message
-    if (!panel.dataset.hasOpened) {
-      appendMessage('Halo! Selamat datang di <b>IT Support Jabodetabek</b>. Saya asisten virtual PT.ITS. Ada yang bisa saya bantu hari ini? Silakan ketik pesan atau pilih topik cepat di bawah.', 'bot');
-      panel.dataset.hasOpened = '1';
-    }
+    // Sync session state from the backend
+    syncSession();
   }
 
   function closePanel() {
     if (!panel || !toggleBtn) return;
     panel.setAttribute('aria-hidden', 'true');
     toggleBtn.setAttribute('aria-pressed', 'false');
+    stopPolling();
   }
 
-  // EVENT LISTENERS
+  // Toggle button click listener
   if (toggleBtn) {
     toggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -216,6 +463,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Close button click listener
   if (closeBtn) {
     closeBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -223,17 +471,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Send message on click
+  // Send message action on click
   if (sendBtn && input) {
     sendBtn.addEventListener('click', (e) => {
       e.preventDefault();
       const v = input.value.trim();
       if (!v) return;
       
-      appendMessage(v, 'user');
       input.value = '';
-      botReply(v);
-      updateSuggestionsForText(v);
+      
+      if (isLiveChat) {
+        sendUserMessageToAdmin(v);
+      } else {
+        appendMessage(v, 'user');
+        
+        const isRequestingAdmin = /(admin|operator|support|bantuan manusia|hubungi)/i.test(v);
+        if (isRequestingAdmin) {
+          startLiveChatDirect(v);
+        } else {
+          botReply(v);
+          updateSuggestionsForText(v);
+        }
+      }
     });
   }
 
@@ -247,7 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Close chatbot panel when clicking outside
+  // Close panel on outside click
   document.addEventListener('click', (e) => {
     if (!widgetContainer || !panel) return;
     
@@ -259,6 +518,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Render initial quick suggestions
+  // Render initial quick suggestions (will be updated or hidden on sync)
   renderQuickReplies();
 });

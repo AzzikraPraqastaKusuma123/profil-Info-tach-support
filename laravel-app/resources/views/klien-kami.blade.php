@@ -35,33 +35,6 @@
 
             <div class="clients-grid">
                 @php
-                    $clients = [
-                        ["name" => "PT. Toyota Indonesia", "logo" => "/clients/Toyota.png", "industry" => "Manufaktur"],
-                        ["name" => "MNC Group", "logo" => "/clients/MNC.png", "industry" => "Media & Telekomunikasi"],
-                        ["name" => "PT. PLN (Persero)", "logo" => "/clients/PLN.png", "industry" => "Energi"],
-                        ["name" => "PT. Pertamina", "logo" => "/clients/pertamina.png", "industry" => "Energi"],
-                        ["name" => "PT. Epson Indonesia", "logo" => "/clients/epson.png", "industry" => "Teknologi"],
-                        ["name" => "PT. Yamaha Indonesia", "logo" => "/clients/yamaha.png", "industry" => "Otomotif"],
-                        ["name" => "PT. Pos Indonesia", "logo" => "/clients/pos.png", "industry" => "Logistik"],
-                        ["name" => "PT. INKA (Persero)", "logo" => "/clients/inka.png", "industry" => "Manufaktur"],
-                        ["name" => "Telkom Indonesia", "logo" => "/clients/telkom.png", "industry" => "Telekomunikasi"],
-                        ["name" => "Siloam Hospitals", "logo" => "/clients/siloam.png", "industry" => "Kesehatan"],
-                        ["name" => "WIKA", "logo" => "/clients/wika.png", "industry" => "Konstruksi"],
-                        ["name" => "Wings Group", "logo" => "/clients/wings.png", "industry" => "FMCG"],
-                        ["name" => "Wyndham Hotels", "logo" => "/clients/wyndham.png", "industry" => "Hospitality"],
-                        ["name" => "Tamansari Hive", "logo" => "/clients/tamansari.png", "industry" => "Properti"],
-                        ["name" => "PT. Pertani", "logo" => "/clients/Pertani.png", "industry" => "Agrikultur"],
-                        ["name" => "DIKA", "logo" => "/clients/dika.png", "industry" => "Konsultan"],
-                        ["name" => "BW", "logo" => "/clients/BW.png", "industry" => "Konsultan"],
-                        ["name" => "Yayasan", "logo" => "/clients/yayasan.png", "industry" => "Pendidikan/Sosial"],
-                        ["name" => "Umroh & Haji", "logo" => "/clients/umroh.png", "industry" => "Travel"],
-                        ["name" => "Mangkuluhur", "logo" => "/clients/mangkuluhur.png", "industry" => "Properti"],
-                        ["name" => "Reka", "logo" => "/clients/reka.png", "industry" => "Desain & Konstruksi"],
-                        ["name" => "Intrama", "logo" => "/clients/intrama.png", "industry" => "Perdagangan"],
-                        ["name" => "Promisco", "logo" => "/clients/promisco.png", "industry" => "Retail"],
-                        ["name" => "Adi Upaya", "logo" => "/clients/adi upaya.png", "industry" => "Layanan"]
-                    ];
-
                     $industryIcons = [
                         "Manufaktur" => "factory",
                         "Media & Telekomunikasi" => "tv",

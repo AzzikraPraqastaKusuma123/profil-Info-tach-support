@@ -28,46 +28,22 @@
 
             <!-- Services Grid -->
             <div class="layanan-grid">
-                @php
-                    $services = [
-                        [
-                            "icon" => "monitor", "title" => "Service Laptop & PC", "category" => "Hardware",
-                            "desc" => "Kami menangani berbagai kerusakan laptop dan PC dengan penanganan cepat dan bergaransi. Dipercaya oleh ratusan pengguna di Jabodetabek.",
-                            "features" => ["Ganti LCD/LED", "Upgrade RAM & SSD", "Perbaikan Motherboard", "Install Ulang OS", "Cleaning & Servis Berkala", "Penggantian Baterai"]
-                        ],
-                        [
-                            "icon" => "wifi", "title" => "Instalasi Jaringan", "category" => "Network",
-                            "desc" => "Pemasangan dan konfigurasi jaringan LAN/WiFi untuk rumah, kantor, dan gedung komersial dengan perangkat berkualitas tinggi.",
-                            "features" => ["Setting Router & Switch", "Instalasi Kabel LAN CAT6", "Konfigurasi WiFi Enterprise", "VPN Setup", "Network Monitoring", "Troubleshooting Jaringan"]
-                        ],
-                        [
-                            "icon" => "camera", "title" => "Pasang CCTV", "category" => "Security",
-                            "desc" => "Instalasi CCTV profesional untuk keamanan rumah, toko, kantor, dan area publik dengan kamera resolusi tinggi dan bisa dipantau jarak jauh.",
-                            "features" => ["CCTV Indoor & Outdoor", "Resolusi HD/Full HD/4K", "Pemantauan via Smartphone", "DVR & NVR Setup", "Kabel & Aksesoris Lengkap", "Garansi Instalasi"]
-                        ],
-                        [
-                            "icon" => "globe", "title" => "Pembuatan Website", "category" => "Digital",
-                            "desc" => "Desain dan pengembangan website profesional yang responsif, cepat, dan SEO-friendly untuk meningkatkan eksistensi bisnis Anda secara online.",
-                            "features" => ["Website Company Profile", "Landing Page", "Website Toko Online", "Sistem Informasi Custom", "Domain & Hosting", "Maintenance Berkala"]
-                        ],
-                        [
-                            "icon" => "wrench", "title" => "Maintenance IT", "category" => "Maintenance",
-                            "desc" => "Layanan perawatan rutin perangkat komputer dan infrastruktur jaringan untuk memastikan sistem IT Anda selalu berjalan optimal dan bebas masalah.",
-                            "features" => ["Perawatan PC Berkala", "Update Software & Antivirus", "Backup Data Rutin", "Monitoring Jaringan", "Penanganan Masalah Cepat", "Laporan Bulanan"]
-                        ],
-                        [
-                            "icon" => "headphones", "title" => "Konsultasi IT", "category" => "Consulting",
-                            "desc" => "Dapatkan saran dan rekomendasi ahli untuk kebutuhan infrastruktur IT bisnis Anda. Kami membantu Anda membuat keputusan teknologi yang tepat.",
-                            "features" => ["Analisis Kebutuhan IT", "Perencanaan Infrastruktur", "Rekomendasi Perangkat", "Audit Keamanan Jaringan", "Optimasi Sistem", "Pendampingan Proyek IT"]
-                        ]
-                    ];
-                @endphp
+
 
                 @foreach($services as $s)
                     <div class="layanan-card reveal" data-category="{{ $s['category'] }}">
-                        <div class="layanan-card-header">
-                            <div class="layanan-icon"><i data-lucide="{{ $s['icon'] }}" style="width:40px;height:40px"></i></div>
-                        </div>
+                        @if(!empty($s->image))
+                            <div class="layanan-image-wrapper">
+                                <img src="{{ asset($s->image) }}" alt="{{ $s['title'] }}" class="layanan-card-img">
+                                <div class="layanan-icon-badge">
+                                    <i data-lucide="{{ $s['icon'] }}" style="width:20px;height:20px"></i>
+                                </div>
+                            </div>
+                        @else
+                            <div class="layanan-card-header">
+                                <div class="layanan-icon"><i data-lucide="{{ $s['icon'] }}" style="width:40px;height:40px"></i></div>
+                            </div>
+                        @endif
                         <h3>{{ $s['title'] }}</h3>
                         <p>{{ $s['desc'] }}</p>
                         <ul class="layanan-features">

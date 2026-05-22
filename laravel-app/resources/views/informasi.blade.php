@@ -34,14 +34,6 @@
 
             <!-- Articles -->
             @php
-                $articles = [
-                    ["id" => 1, "category" => "Tips IT", "title" => "10 Tips Menjaga Laptop Agar Awet dan Tidak Cepat Rusak", "excerpt" => "Laptop adalah investasi penting yang perlu dijaga dengan baik. Berikut 10 tips praktis yang bisa Anda terapkan untuk memperpanjang usia laptop Anda.", "date" => "12 Mei 2025", "author" => "Tim IT Support", "readTime" => "5 menit"],
-                    ["id" => 2, "category" => "Keamanan", "title" => "Pentingnya CCTV untuk Keamanan Bisnis Anda di Era Modern", "excerpt" => "Dengan meningkatnya angka kejahatan, sistem keamanan CCTV bukan lagi sekadar pilihan, melainkan kebutuhan pokok bagi setiap bisnis.", "date" => "5 Mei 2025", "author" => "Tim IT Support", "readTime" => "4 menit"],
-                    ["id" => 3, "category" => "Jaringan", "title" => "Perbedaan WiFi 2.4GHz vs 5GHz: Mana yang Tepat untuk Anda?", "excerpt" => "Bingung memilih frekuensi WiFi yang tepat? Artikel ini menjelaskan perbedaan, kelebihan, dan kekurangan masing-masing frekuensi secara mudah dipahami.", "date" => "28 Apr 2025", "author" => "Tim IT Support", "readTime" => "6 menit"],
-                    ["id" => 4, "category" => "Website", "title" => "Mengapa Bisnis UMKM Wajib Punya Website di Tahun 2025?", "excerpt" => "Di era digital ini, website bukan lagi kemewahan. Temukan alasan mengapa UMKM Anda harus segera go online dan bagaimana cara memulainya.", "date" => "20 Apr 2025", "author" => "Tim IT Support", "readTime" => "7 menit"],
-                    ["id" => 5, "category" => "Tips IT", "title" => "Cara Mudah Mempercepat Komputer Windows yang Lemot", "excerpt" => "Komputer Anda terasa lambat dan membuat frustasi? Ikuti langkah-langkah mudah ini untuk meningkatkan performa PC Anda secara signifikan.", "date" => "15 Apr 2025", "author" => "Tim IT Support", "readTime" => "5 menit"],
-                    ["id" => 6, "category" => "Keamanan", "title" => "Waspada Virus & Malware: Panduan Lengkap Proteksi Komputer", "excerpt" => "Serangan siber semakin canggih. Pelajari cara melindungi perangkat Anda dari berbagai ancaman digital yang mengintai setiap saat.", "date" => "8 Apr 2025", "author" => "Tim IT Support", "readTime" => "8 menit"]
-                ];
                 $categoryColors = [
                     "Tips IT" => "#3b82f6", "Keamanan" => "#ef4444", "Jaringan" => "#10b981", "Website" => "#8b5cf6"
                 ];
@@ -56,9 +48,15 @@
                         $color = $categoryColors[$article['category']] ?? '#3b82f6'; 
                     @endphp
                     <div class="article-card reveal {{ $i === 0 ? 'featured' : '' }}" data-category="{{ $article['category'] }}">
-                        <div class="article-img" style="background: linear-gradient(135deg, {{ $color }}22, {{ $color }}44)">
-                            <i data-lucide="tag" style="width:40px;height:40px;color:{{ $color }};opacity:0.5"></i>
-                        </div>
+                        @if(!empty($article->image))
+                            <div class="article-img">
+                                <img src="{{ asset($article->image) }}" alt="{{ $article['title'] }}" class="article-cover-img">
+                            </div>
+                        @else
+                            <div class="article-img" style="background: linear-gradient(135deg, {{ $color }}22, {{ $color }}44)">
+                                <i data-lucide="tag" style="width:40px;height:40px;color:{{ $color }};opacity:0.5"></i>
+                            </div>
+                        @endif
                         <div class="article-body">
                             <span class="article-cat" style="color: {{ $color }}">{{ $article['category'] }}</span>
                             <h3 class="article-title">{{ $article['title'] }}</h3>
@@ -66,7 +64,7 @@
                             <div class="article-meta">
                                 <span><i data-lucide="calendar" style="width:14px;height:14px"></i> {{ $article['date'] }}</span>
                                 <span><i data-lucide="user" style="width:14px;height:14px"></i> {{ $article['author'] }}</span>
-                                <span>⏱ {{ $article['readTime'] }}</span>
+                                <span>⏱ {{ $article['read_time'] }}</span>
                             </div>
                             <button class="article-read-more">
                                 Baca Selengkapnya <i data-lucide="arrow-right" style="width:16px;height:16px"></i>

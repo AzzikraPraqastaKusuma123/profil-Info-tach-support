@@ -1,0 +1,157 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\ChatSession;
+use App\Models\ChatMessage;
+use Illuminate\Http\Request;
+
+class LiveChatController extends Controller
+{
+    // ==========================================
+    // ADMIN ACTIONS (requires admin session)
+    // ==========================================
+
+    public function chatDashboard()
+    {
+        return view('admin.chat');
+    }
+
+    public function listSessions()
+    {
+        $sessions = ChatSession::orderBy('updated_at', 'desc')->get();
+        return response()->json($sessions);
+    }
+
+    public function getSessionMessages($sessionId)
+    {
+        $session = ChatSession::findOrFail($sessionId);
+        $messages = $session->messages()->orderBy('created_at', 'asc')->get();
+        return response()->json([
+            'session' => $session,
+            'messages' => $messages
+        ]);
+    }
+
+    public function sendAdminMessage(Request $request, $sessionId)
+    {
+        $request->validate([
+            'message' => 'required|string',
+        ]);
+
+        $session = ChatSession::findOrFail($sessionId);
+        
+        $msg = ChatMessage::create([
+            'chat_session_id' => $session->id,
+            'sender' => 'admin',
+            'message' => $request->message
+        ]);
+
+        // Touch the session to update updated_at timestamp
+        $session->touch();
+
+        return response()->json($msg);
+    }
+
+    public function toggleTakeover(Request $request, $sessionId)
+    {
+        $session = ChatSession::findOrFail($sessionId);
+        $session->is_active = $request->input('is_active', !$session->is_active);
+        $session->save();
+
+        // Add a system notice message in the log
+        $statusText = $session->is_active ? 'Live Chat diambil alih oleh Admin.' : 'Live Chat diakhiri oleh Admin.';
+        ChatMessage::create([
+            'chat_session_id' => $session->id,
+            'sender' => 'bot',
+            'message' => $statusText
+        ]);
+
+        return response()->json($session);
+    }
+
+    // ==========================================
+    // VISITOR/USER ACTIONS (public routes)
+    // ==========================================
+
+    public function requestTakeover(Request $request)
+    {
+        $request->validate([
+            'session_key' => 'required|string',
+            'user_name' => 'nullable|string',
+        ]);
+
+        $session = ChatSession::firstOrCreate(
+            ['session_key' => $request->session_key],
+            ['user_name' => $request->user_name ?? 'Pengunjung #' . substr($request->session_key, 0, 5)]
+        );
+
+        $session->is_active = true;
+        $session->save();
+
+        // Insert prompt message
+        ChatMessage::create([
+            'chat_session_id' => $session->id,
+            'sender' => 'user',
+            'message' => '[Meminta bantuan Live Chat Admin]'
+        ]);
+
+        ChatMessage::create([
+            'chat_session_id' => $session->id,
+            'sender' => 'bot',
+            'message' => 'Menghubungkan ke Tim Support... Mohon tunggu sebentar, Admin akan segera membalas pesan Anda.'
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'session' => $session
+        ]);
+    }
+
+    public function getUserMessages(Request $request)
+    {
+        $request->validate([
+            'session_key' => 'required|string',
+        ]);
+
+        $session = ChatSession::where('session_key', $request->session_key)->first();
+
+        if (!$session) {
+            return response()->json([
+                'is_active' => false,
+                'messages' => []
+            ]);
+        }
+
+        $messages = $session->messages()->orderBy('created_at', 'asc')->get();
+
+        return response()->json([
+            'is_active' => (bool) $session->is_active,
+            'messages' => $messages
+        ]);
+    }
+
+    public function sendUserMessage(Request $request)
+    {
+        $request->validate([
+            'session_key' => 'required|string',
+            'message' => 'required|string',
+        ]);
+
+        $session = ChatSession::where('session_key', $request->session_key)->first();
+
+        if (!$session) {
+            return response()->json(['error' => 'Session not found'], 404);
+        }
+
+        $msg = ChatMessage::create([
+            'chat_session_id' => $session->id,
+            'sender' => 'user',
+            'message' => $request->message
+        ]);
+
+        $session->touch();
+
+        return response()->json($msg);
+    }
+}
