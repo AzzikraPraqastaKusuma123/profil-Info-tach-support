@@ -430,6 +430,21 @@
     let sessionsList = [];
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+    function formatFullDateTime(dateStringOrObj) {
+        const dateObj = new Date(dateStringOrObj);
+        const dateStr = dateObj.toLocaleDateString('id-ID', { 
+            weekday: 'long', 
+            day: 'numeric', 
+            month: 'long', 
+            year: 'numeric' 
+        });
+        const timeStr = dateObj.toLocaleTimeString('id-ID', { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        });
+        return `${dateStr} · ${timeStr}`;
+    }
+
     // Get session from URL parameter
     const urlParams = new URLSearchParams(window.location.search);
     const initialSessionId = urlParams.get('session');
@@ -596,13 +611,12 @@
                     wrap.className = `msg-bubble-wrapper ${msg.sender}`;
                     
                     const senderName = msg.sender === 'user' ? session.user_name : (msg.sender === 'admin' ? 'Admin' : 'Assistant Bot');
-                    const dateObj = new Date(msg.created_at);
-                    const timeStr = dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                    const fullTimeStr = formatFullDateTime(msg.created_at);
 
                     wrap.innerHTML = `
                         <div class="msg-sender-name">${senderName}</div>
                         <div class="msg-bubble">${msg.message}</div>
-                        <div class="msg-time">${timeStr}</div>
+                        <div class="msg-time">${fullTimeStr}</div>
                     `;
                     bodyContainer.appendChild(wrap);
                 }
@@ -662,12 +676,12 @@
             const bodyContainer = document.getElementById('chat-body-container');
             const wrap = document.createElement('div');
             wrap.className = 'msg-bubble-wrapper admin';
-            const timeStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            const fullTimeStr = formatFullDateTime(new Date());
             
             wrap.innerHTML = `
                 <div class="msg-sender-name">Admin</div>
                 <div class="msg-bubble">${text}</div>
-                <div class="msg-time">${timeStr}</div>
+                <div class="msg-time">${fullTimeStr}</div>
             `;
             bodyContainer.appendChild(wrap);
             bodyContainer.scrollTop = bodyContainer.scrollHeight;

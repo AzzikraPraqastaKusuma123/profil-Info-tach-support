@@ -68,6 +68,7 @@ Route::middleware([AdminAuthMiddleware::class])->prefix('admin')->name('admin.')
 
     // Live Chat Console
     Route::get('/chat', [LiveChatController::class, 'chatDashboard'])->name('chat');
+    Route::get('/chat/pending-count', [LiveChatController::class, 'getPendingCount'])->name('chat.pending-count');
     Route::get('/chat/sessions', [LiveChatController::class, 'listSessions'])->name('chat.sessions');
     Route::get('/chat/sessions/{id}/messages', [LiveChatController::class, 'getSessionMessages'])->name('chat.messages');
     Route::post('/chat/sessions/{id}/send', [LiveChatController::class, 'sendAdminMessage'])->name('chat.send');

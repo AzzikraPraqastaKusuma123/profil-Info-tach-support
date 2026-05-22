@@ -32,11 +32,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Helper to append chat messages
-  function appendMessage(text, who = 'bot') {
+  function appendMessage(text, who = 'bot', timestamp = null) {
     if (!body) return;
     
     // Check if we are appending a system message (bot / admin status change)
-    const isSystemMsg = who === 'bot' && (text.includes('diambil alih oleh Admin') || text.includes('diakhiri oleh Admin'));
+    const isSystemMsg = who === 'bot' && (
+      text.includes('diambil alih oleh Admin') || 
+      text.includes('diakhiri oleh Admin') || 
+      text.includes('ditutup otomatis')
+    );
     
     const el = document.createElement('div');
     if (isSystemMsg) {
@@ -50,14 +54,40 @@ document.addEventListener('DOMContentLoaded', () => {
       el.style.textAlign = 'center';
       el.style.maxWidth = '95%';
       el.style.padding = '6px 12px';
-    } else {
-      el.className = 'chat-msg ' + who;
-    }
-    
-    if (who === 'bot' || isSystemMsg) {
       el.innerHTML = text;
     } else {
-      el.textContent = text;
+      el.className = 'chat-msg ' + who;
+      
+      // Text container
+      const textContainer = document.createElement('div');
+      if (who === 'bot' || who === 'system-notice') {
+        textContainer.innerHTML = text;
+      } else {
+        textContainer.textContent = text;
+      }
+      el.appendChild(textContainer);
+      
+      // Timestamp
+      const timeObj = timestamp ? new Date(timestamp) : new Date();
+      const dateStr = timeObj.toLocaleDateString('id-ID', { 
+          weekday: 'long', 
+          day: 'numeric', 
+          month: 'long', 
+          year: 'numeric' 
+      });
+      const timeStr = timeObj.toLocaleTimeString('id-ID', { 
+          hour: '2-digit', 
+          minute: '2-digit' 
+      });
+      
+      const timeEl = document.createElement('div');
+      timeEl.style.fontSize = '0.65rem';
+      timeEl.style.opacity = '0.5';
+      timeEl.style.marginTop = '4px';
+      timeEl.style.textAlign = 'right';
+      timeEl.textContent = `${dateStr} · ${timeStr}`;
+      
+      el.appendChild(timeEl);
     }
     
     body.appendChild(el);
@@ -363,7 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!lastMessageIds.has(msg.id)) {
             lastMessageIds.add(msg.id);
             // Append message. If sender is 'user', append as 'user'. If sender is 'admin' or 'bot', append as 'bot'
-            appendMessage(msg.message, msg.sender === 'user' ? 'user' : 'bot');
+            appendMessage(msg.message, msg.sender === 'user' ? 'user' : 'bot', msg.created_at);
             hasNew = true;
           }
         });
@@ -390,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (body) body.innerHTML = ''; // Clear fallback messages
           data.messages.forEach(msg => {
             lastMessageIds.add(msg.id);
-            appendMessage(msg.message, msg.sender === 'user' ? 'user' : 'bot');
+            appendMessage(msg.message, msg.sender === 'user' ? 'user' : 'bot', msg.created_at);
           });
 
           if (isLiveChat) {

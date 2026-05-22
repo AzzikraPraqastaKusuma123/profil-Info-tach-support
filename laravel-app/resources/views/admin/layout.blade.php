@@ -376,9 +376,12 @@
                 <i data-lucide="file-text" class="menu-item-icon"></i>
                 <span>Informasi/Artikel</span>
             </a>
-            <a href="/admin/chat" class="menu-item {{ Request::is('admin/chat*') ? 'active' : '' }}">
-                <i data-lucide="message-square" class="menu-item-icon"></i>
-                <span>Live Chat Console</span>
+            <a href="/admin/chat" class="menu-item {{ Request::is('admin/chat*') ? 'active' : '' }}" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <span style="display: flex; align-items: center; gap: 12px;">
+                    <i data-lucide="message-square" class="menu-item-icon"></i>
+                    <span>Live Chat Console</span>
+                </span>
+                <span id="chat-nav-badge" style="display: none; background: #ef4444; color: white; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 700;">0</span>
             </a>
         </nav>
 
@@ -455,6 +458,30 @@
                 setTimeout(() => errorToast.remove(), 500);
             }
         }, 4000);
+
+        // Chat Notification Polling for Admin Nav Link
+        async function checkPendingChats() {
+            try {
+                const res = await fetch('/admin/chat/pending-count');
+                if (res.ok) {
+                    const data = await res.json();
+                    const badge = document.getElementById('chat-nav-badge');
+                    if (badge) {
+                        if (data.count > 0) {
+                            badge.textContent = data.count;
+                            badge.style.display = 'inline-block';
+                        } else {
+                            badge.style.display = 'none';
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error('Error fetching chat count:', err);
+            }
+        }
+        
+        checkPendingChats();
+        setInterval(checkPendingChats, 5000);
     </script>
     @yield('scripts')
 </body>

@@ -19,12 +19,14 @@ class LiveChatController extends Controller
 
     public function listSessions()
     {
+        $this->checkAutoCloseSessions();
         $sessions = ChatSession::orderBy('updated_at', 'desc')->get();
         return response()->json($sessions);
     }
 
     public function getSessionMessages($sessionId)
     {
+        $this->checkAutoCloseSessions();
         $session = ChatSession::findOrFail($sessionId);
         $messages = $session->messages()->orderBy('created_at', 'asc')->get();
         return response()->json([
@@ -35,6 +37,7 @@ class LiveChatController extends Controller
 
     public function sendAdminMessage(Request $request, $sessionId)
     {
+        $this->checkAutoCloseSessions();
         $request->validate([
             'message' => 'required|string',
         ]);
@@ -55,6 +58,7 @@ class LiveChatController extends Controller
 
     public function toggleTakeover(Request $request, $sessionId)
     {
+        $this->checkAutoCloseSessions();
         $session = ChatSession::findOrFail($sessionId);
         $session->is_active = $request->input('is_active', !$session->is_active);
         $session->save();
@@ -76,6 +80,7 @@ class LiveChatController extends Controller
 
     public function requestTakeover(Request $request)
     {
+        $this->checkAutoCloseSessions();
         $request->validate([
             'session_key' => 'required|string',
             'user_name' => 'nullable|string',
@@ -116,6 +121,7 @@ class LiveChatController extends Controller
 
     public function getUserMessages(Request $request)
     {
+        $this->checkAutoCloseSessions();
         $request->validate([
             'session_key' => 'required|string',
         ]);
@@ -139,6 +145,7 @@ class LiveChatController extends Controller
 
     public function sendUserMessage(Request $request)
     {
+        $this->checkAutoCloseSessions();
         $request->validate([
             'session_key' => 'required|string',
             'message' => 'required|string',
@@ -159,5 +166,44 @@ class LiveChatController extends Controller
         $session->touch();
 
         return response()->json($msg);
+    }
+
+    public function getPendingCount()
+    {
+        $this->checkAutoCloseSessions();
+
+        // Count active sessions where the last message is from user
+        $sessions = ChatSession::where('is_active', true)->get();
+        $count = 0;
+
+        foreach ($sessions as $session) {
+            $lastMessage = $session->messages()->orderBy('created_at', 'desc')->first();
+            if ($lastMessage && $lastMessage->sender === 'user') {
+                $count++;
+            }
+        }
+
+        return response()->json(['count' => $count]);
+    }
+
+    private function checkAutoCloseSessions()
+    {
+        $cutoff = now()->subHours(12);
+
+        $expiredSessions = ChatSession::where('is_active', true)
+            ->where('updated_at', '<', $cutoff)
+            ->get();
+
+        foreach ($expiredSessions as $session) {
+            $session->is_active = false;
+            $session->save();
+
+            // Insert system notice message log
+            ChatMessage::create([
+                'chat_session_id' => $session->id,
+                'sender' => 'bot',
+                'message' => '[Sesi ditutup otomatis setelah 12 jam - Dialihkan ke Bot Chat]'
+            ]);
+        }
     }
 }
