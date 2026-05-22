@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@yield('title', 'Dashboard Overview')
+@section('title', 'Dashboard Overview')
 @section('page-title', 'Dashboard Overview')
 
 @section('styles')

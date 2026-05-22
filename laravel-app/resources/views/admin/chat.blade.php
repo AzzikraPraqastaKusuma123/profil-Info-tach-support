@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@yield('title', 'Live Chat Console')
+@section('title', 'Live Chat Console')
 @section('page-title', 'Live Chat Console')
 
 @section('styles')

@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@yield('title', 'Kelola Layanan Kami')
+@section('title', 'Kelola Layanan Kami')
 @section('page-title', 'Kelola Layanan Kami')
 
 @section('styles')
