@@ -46,13 +46,13 @@ class AdminDashboardController extends Controller
             'desc' => 'required|string',
             'features' => 'required|array',
             'features.*' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $imagePath = null;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $filename = 'service_' . time() . '.' . $file->getClientOriginalExtension();
+            $filename = 'service_' . time() . '.' . $file->extension();
             $file->move(public_path('services'), $filename);
             $imagePath = '/services/' . $filename;
         }
@@ -78,7 +78,7 @@ class AdminDashboardController extends Controller
             'desc' => 'required|string',
             'features' => 'required|array',
             'features.*' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $service = Service::findOrFail($id);
@@ -92,7 +92,7 @@ class AdminDashboardController extends Controller
             }
 
             $file = $request->file('image');
-            $filename = 'service_' . time() . '.' . $file->getClientOriginalExtension();
+            $filename = 'service_' . time() . '.' . $file->extension();
             $file->move(public_path('services'), $filename);
             $imagePath = '/services/' . $filename;
         }
@@ -138,13 +138,13 @@ class AdminDashboardController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'industry' => 'required|string|max:255',
-            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $logoPath = '';
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
-            $filename = 'client_' . time() . '.' . $file->getClientOriginalExtension();
+            $filename = 'client_' . time() . '.' . $file->extension();
             // Store directly in public/clients/ directory
             $file->move(public_path('clients'), $filename);
             $logoPath = '/clients/' . $filename;
@@ -164,7 +164,7 @@ class AdminDashboardController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'industry' => 'required|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $client = Client::findOrFail($id);
@@ -180,7 +180,7 @@ class AdminDashboardController extends Controller
             }
 
             $file = $request->file('logo');
-            $filename = 'client_' . time() . '.' . $file->getClientOriginalExtension();
+            $filename = 'client_' . time() . '.' . $file->extension();
             $file->move(public_path('clients'), $filename);
             $logoPath = '/clients/' . $filename;
         }
@@ -225,13 +225,13 @@ class AdminDashboardController extends Controller
             'excerpt' => 'required|string',
             'read_time' => 'required|string|max:255',
             'content' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $imagePath = null;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $filename = 'info_' . time() . '.' . $file->getClientOriginalExtension();
+            $filename = 'info_' . time() . '.' . $file->extension();
             $file->move(public_path('information'), $filename);
             $imagePath = '/information/' . $filename;
         }
@@ -258,7 +258,7 @@ class AdminDashboardController extends Controller
             'excerpt' => 'required|string',
             'read_time' => 'required|string|max:255',
             'content' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $article = Information::findOrFail($id);
@@ -272,7 +272,7 @@ class AdminDashboardController extends Controller
             }
 
             $file = $request->file('image');
-            $filename = 'info_' . time() . '.' . $file->getClientOriginalExtension();
+            $filename = 'info_' . time() . '.' . $file->extension();
             $file->move(public_path('information'), $filename);
             $imagePath = '/information/' . $filename;
         }

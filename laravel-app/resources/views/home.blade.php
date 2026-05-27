@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'IT Support Jabodetabek | Solusi IT Profesional')
+@section('title', 'Jasa IT Support Jabodetabek | Maintenance Komputer, Server, CCTV & Jaringan Kantor')
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/Home.css') }}">
@@ -42,7 +42,7 @@
                     <a href="https://wa.me/6281210874692" target="_blank" rel="noreferrer" class="btn btn-accent">
                         Konsultasi Gratis <i data-lucide="arrow-right" style="width:18px;height:18px;margin-left:8px"></i>
                     </a>
-                    <a href="{{ url('/layanan-kami') }}" class="btn btn-outline">
+                    <a href="{{ route('layanan-kami') }}" class="btn btn-outline">
                         Lihat Layanan
                     </a>
                 </div>
@@ -138,7 +138,7 @@
                         if ($idx === 4) $cardClass = "bento-card bento-wide reveal";
                         if ($idx === 5) $cardClass = "bento-card bento-wide reveal";
                     @endphp
-                    <a href="{{ url('/layanan-kami') }}" class="{{ $cardClass }}" style="--bento-accent: {{ $s['color'] }}">
+                    <a href="{{ route('layanan-kami') }}" class="{{ $cardClass }}" style="--bento-accent: {{ $s['color'] }}">
                         <div class="bento-glow"></div>
                         <div class="bento-image-bg" style="background-image: url('{{ asset($s['img']) }}')"></div>
                         <div class="bento-overlay"></div>
@@ -179,7 +179,7 @@
                         <li><i data-lucide="check-circle" class="check-accent" style="width:20px;height:20px"></i> <span>Transparansi diagnosa & solusi</span></li>
                         <li><i data-lucide="check-circle" class="check-accent" style="width:20px;height:20px"></i> <span>Teknisi tersertifikasi</span></li>
                     </ul>
-                    <a href="{{ url('/tentang-kami') }}" class="premium-btn mt-6">
+                    <a href="{{ route('tentang-kami') }}" class="premium-btn mt-6">
                         Mengenal Tim Kami
                     </a>
                 </div>

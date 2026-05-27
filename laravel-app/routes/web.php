@@ -14,34 +14,54 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/tentang-kami', function () {
+Route::get('/dGVudGFuZ19rYW1pX3NlY3VyZV90b2tlbl9hMWIyYzNkNGU1ZjZnN2g4X3ZlcmlmaWNhdGlvbl9rZXlfcHRfaXRzXzIwMjZfcHJvZmlsZQ==', function () {
     return view('tentang-kami');
-});
+})->name('tentang-kami');
 
-Route::get('/layanan-kami', function () {
+Route::get('/bGF5YW5hbl9rYW1pX3NlcnZpY2VzX3NlY3VyZV90b2tlbl96OXk4eDd3NnY1dTR0M3MyX3ZlcmlmaWNhdGlvbl9rZXlfcHRfaXRzXzIwMjZfcHJvZmlsZQ==', function () {
     $services = Service::all();
     return view('layanan-kami', compact('services'));
-});
+})->name('layanan-kami');
 
-Route::get('/klien-kami', function () {
+Route::get('/a2xpZW5fa2FtaV9jbGllbnRzX3NlY3VyZV90b2tlbl9xMXcyZTNyNHQ1eTZ1N2k4X3ZlcmlmaWNhdGlvbl9rZXlfcHRfaXRzXzIwMjZfcHJvZmlsZQ==', function () {
     $clients = Client::all();
     return view('klien-kami', compact('clients'));
-});
+})->name('klien-kami');
 
-Route::get('/informasi', function () {
+Route::get('/aW5mb3JtYXNpX25ld3Nfc2VjdXJlX3Rva2VuX20wbjliOHY3YzZ4NXo0bDNfdmVyaWZpY2F0aW9uX2tleV9wdF9pdHNfMjAyNl9wcm9maWxl', function () {
     $articles = Information::all();
     return view('informasi', compact('articles'));
-});
+})->name('informasi');
 
-// Visitor Chat API
-Route::post('/api/chat/takeover', [LiveChatController::class, 'requestTakeover']);
-Route::get('/api/chat/messages', [LiveChatController::class, 'getUserMessages']);
-Route::post('/api/chat/send', [LiveChatController::class, 'sendUserMessage']);
+// Redirects from old routes to obfuscated ones
+Route::redirect('/tentang-kami', '/dGVudGFuZ19rYW1pX3NlY3VyZV90b2tlbl9hMWIyYzNkNGU1ZjZnN2g4X3ZlcmlmaWNhdGlvbl9rZXlfcHRfaXRzXzIwMjZfcHJvZmlsZQ==', 301);
+Route::redirect('/layanan-kami', '/bGF5YW5hbl9rYW1pX3NlcnZpY2VzX3NlY3VyZV90b2tlbl96OXk4eDd3NnY1dTR0M3MyX3ZlcmlmaWNhdGlvbl9rZXlfcHRfaXRzXzIwMjZfcHJvZmlsZQ==', 301);
+Route::redirect('/klien-kami', '/a2xpZW5fa2FtaV9jbGllbnRzX3NlY3VyZV90b2tlbl9xMXcyZTNyNHQ1eTZ1N2k4X3ZlcmlmaWNhdGlvbl9rZXlfcHRfaXRzXzIwMjZfcHJvZmlsZQ==', 301);
+Route::redirect('/informasi', '/aW5mb3JtYXNpX25ld3Nfc2VjdXJlX3Rva2VuX20wbjliOHY3YzZ4NXo0bDNfdmVyaWZpY2F0aW9uX2tleV9wdF9pdHNfMjAyNl9wcm9maWxl', 301);
+
+// Redirects from old short obfuscated routes to new long obfuscated ones
+Route::redirect('/dGVudGFuZy1rYW1p', '/dGVudGFuZ19rYW1pX3NlY3VyZV90b2tlbl9hMWIyYzNkNGU1ZjZnN2g4X3ZlcmlmaWNhdGlvbl9rZXlfcHRfaXRzXzIwMjZfcHJvZmlsZQ==', 301);
+Route::redirect('/bGF5YW5hbi1rYW1p', '/bGF5YW5hbl9rYW1pX3NlcnZpY2VzX3NlY3VyZV90b2tlbl96OXk4eDd3NnY1dTR0M3MyX3ZlcmlmaWNhdGlvbl9rZXlfcHRfaXRzXzIwMjZfcHJvZmlsZQ==', 301);
+Route::redirect('/a2xpZW4ta2FtaQ==', '/a2xpZW5fa2FtaV9jbGllbnRzX3NlY3VyZV90b2tlbl9xMXcyZTNyNHQ1eTZ1N2k4X3ZlcmlmaWNhdGlvbl9rZXlfcHRfaXRzXzIwMjZfcHJvZmlsZQ==', 301);
+Route::redirect('/aW5mb3JtYXNp', '/aW5mb3JtYXNpX25ld3Nfc2VjdXJlX3Rva2VuX20wbjliOHY3YzZ4NXo0bDNfdmVyaWZpY2F0aW9uX2tleV9wdF9pdHNfMjAyNl9wcm9maWxl', 301);
+
+// Redirects from previous prefix-identical long obfuscated routes to new distinct ones
+Route::redirect('/cGFnZV9zZWN1cml0eV90b2tlbl92ZXJpZmljYXRpb25fdGVudGFuZ19rYW1pX2l0c3VwcG9ydF8yMDI2X3NlY3VyZV9yb3V0ZV9oYXNo', '/dGVudGFuZ19rYW1pX3NlY3VyZV90b2tlbl9hMWIyYzNkNGU1ZjZnN2g4X3ZlcmlmaWNhdGlvbl9rZXlfcHRfaXRzXzIwMjZfcHJvZmlsZQ==', 301);
+Route::redirect('/cGFnZV9zZWN1cml0eV90b2tlbl92ZXJpZmljYXRpb25fbGF5YW5hbl9rYW1pX2l0c3VwcG9ydF8yMDI2X3NlY3VyZV9yb3V0ZV9oYXNo', '/bGF5YW5hbl9rYW1pX3NlcnZpY2VzX3NlY3VyZV90b2tlbl96OXk4eDd3NnY1dTR0M3MyX3ZlcmlmaWNhdGlvbl9rZXlfcHRfaXRzXzIwMjZfcHJvZmlsZQ==', 301);
+Route::redirect('/cGFnZV9zZWN1cml0eV90b2tlbl92ZXJpZmljYXRpb25fa2xpZW5fa2FtaV9pdHN1cHBvcnRfMjAyNl9zZWN1cmVfcm91dGVfaGFzaA==', '/a2xpZW5fa2FtaV9jbGllbnRzX3NlY3VyZV90b2tlbl9xMXcyZTNyNHQ1eTZ1N2k4X3ZlcmlmaWNhdGlvbl9rZXlfcHRfaXRzXzIwMjZfcHJvZmlsZQ==', 301);
+Route::redirect('/cGFnZV9zZWN1cml0eV90b2tlbl92ZXJpZmljYXRpb25faW5mb3JtYXNpX2l0c3VwcG9ydF8yMDI2X3NlY3VyZV9yb3V0ZV9oYXNo', '/aW5mb3JtYXNpX25ld3Nfc2VjdXJlX3Rva2VuX20wbjliOHY3YzZ4NXo0bDNfdmVyaWZpY2F0aW9uX2tleV9wdF9pdHNfMjAyNl9wcm9maWxl', 301);
+
+// Visitor Chat API (Throttled to prevent spam and DoS)
+Route::middleware('throttle:60,1')->group(function () {
+    Route::post('/api/chat/takeover', [LiveChatController::class, 'requestTakeover']);
+    Route::get('/api/chat/messages', [LiveChatController::class, 'getUserMessages']);
+    Route::post('/api/chat/send', [LiveChatController::class, 'sendUserMessage']);
+});
 
 // Admin Authentication
 Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
-Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
-Route::get('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+Route::post('/admin/login', [AdminAuthController::class, 'login'])->middleware('throttle:5,1')->name('admin.login.submit');
+Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
 // Admin Panel (Protected by AdminAuthMiddleware)
 Route::middleware([AdminAuthMiddleware::class])->prefix('admin')->name('admin.')->group(function () {

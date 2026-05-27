@@ -430,6 +430,17 @@
     let sessionsList = [];
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+    // ── SECURITY HELPER: Escape HTML to prevent XSS from visitor-controlled input ──
+    function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
     function formatFullDateTime(dateStringOrObj) {
         const dateObj = new Date(dateStringOrObj);
         const dateStr = dateObj.toLocaleDateString('id-ID', { 
@@ -500,18 +511,40 @@
             const statusClass = session.is_active ? 'status-active' : 'status-inactive';
             const statusText = session.is_active ? 'Diambil Alih' : 'Bot Chat';
 
-            item.innerHTML = `
-                <div class="session-avatar">${initial}</div>
-                <div class="session-info">
-                    <div class="session-top">
-                        <div class="session-name">${session.user_name}</div>
-                        <div class="session-time">${timeStr}</div>
-                    </div>
-                    <div class="session-top" style="margin-top: 4px;">
-                        <span class="session-status ${statusClass}">${statusText}</span>
-                    </div>
-                </div>
-            `;
+            // SECURITY: Build sidebar item using safe DOM methods to prevent XSS from visitor user_name
+            const avatarDiv = document.createElement('div');
+            avatarDiv.className = 'session-avatar';
+            avatarDiv.textContent = initial; // safe: single char initial
+
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'session-name';
+            nameDiv.textContent = session.user_name; // safe: textContent escapes HTML
+
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'session-time';
+            timeDiv.textContent = timeStr;
+
+            const statusSpan = document.createElement('span');
+            statusSpan.className = `session-status ${statusClass}`;
+            statusSpan.textContent = statusText;
+
+            const topRow = document.createElement('div');
+            topRow.className = 'session-top';
+            topRow.appendChild(nameDiv);
+            topRow.appendChild(timeDiv);
+
+            const statusRow = document.createElement('div');
+            statusRow.className = 'session-top';
+            statusRow.style.marginTop = '4px';
+            statusRow.appendChild(statusSpan);
+
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'session-info';
+            infoDiv.appendChild(topRow);
+            infoDiv.appendChild(statusRow);
+
+            item.appendChild(avatarDiv);
+            item.appendChild(infoDiv);
             container.appendChild(item);
         });
     }
@@ -601,7 +634,7 @@
             bodyContainer.innerHTML = '';
             messages.forEach(msg => {
                 if (msg.message.startsWith('[') && msg.message.endsWith(']')) {
-                    // Render system notice message
+                    // Render system notice message (no HTML)
                     const systemDiv = document.createElement('div');
                     systemDiv.className = 'msg-system';
                     systemDiv.textContent = msg.message;
@@ -609,15 +642,34 @@
                 } else {
                     const wrap = document.createElement('div');
                     wrap.className = `msg-bubble-wrapper ${msg.sender}`;
-                    
-                    const senderName = msg.sender === 'user' ? session.user_name : (msg.sender === 'admin' ? 'Admin' : 'Assistant Bot');
+
+                    // SECURITY: visitor (user) fields are untrusted → escape them
+                    // Admin and Bot messages are trusted → allow HTML formatting
+                    const isUserMsg = msg.sender === 'user';
+                    const senderLabel = isUserMsg ? session.user_name : (msg.sender === 'admin' ? 'Admin' : 'Assistant Bot');
                     const fullTimeStr = formatFullDateTime(msg.created_at);
 
-                    wrap.innerHTML = `
-                        <div class="msg-sender-name">${senderName}</div>
-                        <div class="msg-bubble">${msg.message}</div>
-                        <div class="msg-time">${fullTimeStr}</div>
-                    `;
+                    const senderNameEl = document.createElement('div');
+                    senderNameEl.className = 'msg-sender-name';
+                    senderNameEl.textContent = senderLabel; // SAFE: textContent
+
+                    const bubbleEl = document.createElement('div');
+                    bubbleEl.className = 'msg-bubble';
+                    if (isUserMsg) {
+                        // SECURITY: visitor message → escape to prevent Stored XSS
+                        bubbleEl.textContent = msg.message;
+                    } else {
+                        // Admin/Bot messages are trusted (admin authored) → allow HTML
+                        bubbleEl.innerHTML = msg.message;
+                    }
+
+                    const timeEl = document.createElement('div');
+                    timeEl.className = 'msg-time';
+                    timeEl.textContent = fullTimeStr;
+
+                    wrap.appendChild(senderNameEl);
+                    wrap.appendChild(bubbleEl);
+                    wrap.appendChild(timeEl);
                     bodyContainer.appendChild(wrap);
                 }
             });
@@ -673,16 +725,27 @@
             const data = await res.json();
             
             // Append message locally immediately to look snappy
+            // Admin text is trusted (admin-authored), but use safe DOM construction anyway
             const bodyContainer = document.getElementById('chat-body-container');
             const wrap = document.createElement('div');
             wrap.className = 'msg-bubble-wrapper admin';
             const fullTimeStr = formatFullDateTime(new Date());
-            
-            wrap.innerHTML = `
-                <div class="msg-sender-name">Admin</div>
-                <div class="msg-bubble">${text}</div>
-                <div class="msg-time">${fullTimeStr}</div>
-            `;
+
+            const senderEl = document.createElement('div');
+            senderEl.className = 'msg-sender-name';
+            senderEl.textContent = 'Admin';
+
+            const bubbleEl = document.createElement('div');
+            bubbleEl.className = 'msg-bubble';
+            bubbleEl.innerHTML = text; // Admin messages may contain formatting
+
+            const timeEl = document.createElement('div');
+            timeEl.className = 'msg-time';
+            timeEl.textContent = fullTimeStr;
+
+            wrap.appendChild(senderEl);
+            wrap.appendChild(bubbleEl);
+            wrap.appendChild(timeEl);
             bodyContainer.appendChild(wrap);
             bodyContainer.scrollTop = bodyContainer.scrollHeight;
 

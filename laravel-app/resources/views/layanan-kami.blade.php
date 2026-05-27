@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Layanan Kami | IT Support Jabodetabek')
+@section('canonical', 'https://itsupport-jabodetabek.com/layanan-kami')
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/LayananKami.css') }}">

@@ -27,10 +27,10 @@
         <!-- Desktop Links -->
         <ul class="navbar-links">
             <li><a href="{{ url('/') }}" class="navbar-link {{ request()->is('/') ? 'active' : '' }}">Home</a></li>
-            <li><a href="{{ url('/tentang-kami') }}" class="navbar-link {{ request()->is('tentang-kami') ? 'active' : '' }}">Tentang Kami</a></li>
-            <li><a href="{{ url('/layanan-kami') }}" class="navbar-link {{ request()->is('layanan-kami') ? 'active' : '' }}">Layanan Kami</a></li>
-            <li><a href="{{ url('/informasi') }}" class="navbar-link {{ request()->is('informasi') ? 'active' : '' }}">Informasi</a></li>
-            <li><a href="{{ url('/klien-kami') }}" class="navbar-link {{ request()->is('klien-kami') ? 'active' : '' }}">Klien Kami</a></li>
+            <li><a href="{{ route('tentang-kami') }}" class="navbar-link {{ request()->routeIs('tentang-kami') ? 'active' : '' }}">Tentang Kami</a></li>
+            <li><a href="{{ route('layanan-kami') }}" class="navbar-link {{ request()->routeIs('layanan-kami') ? 'active' : '' }}">Layanan Kami</a></li>
+            <li><a href="{{ route('informasi') }}" class="navbar-link {{ request()->routeIs('informasi') ? 'active' : '' }}">Informasi</a></li>
+            <li><a href="{{ route('klien-kami') }}" class="navbar-link {{ request()->routeIs('klien-kami') ? 'active' : '' }}">Klien Kami</a></li>
         </ul>
 
         <!-- CTA Desktop -->
@@ -48,10 +48,10 @@
     <div class="mobile-menu" id="mobile-menu">
         <ul>
             <li><a href="{{ url('/') }}" class="mobile-link {{ request()->is('/') ? 'active' : '' }}">Home</a></li>
-            <li><a href="{{ url('/tentang-kami') }}" class="mobile-link {{ request()->is('tentang-kami') ? 'active' : '' }}">Tentang Kami</a></li>
-            <li><a href="{{ url('/layanan-kami') }}" class="mobile-link {{ request()->is('layanan-kami') ? 'active' : '' }}">Layanan Kami</a></li>
-            <li><a href="{{ url('/informasi') }}" class="mobile-link {{ request()->is('informasi') ? 'active' : '' }}">Informasi</a></li>
-            <li><a href="{{ url('/klien-kami') }}" class="mobile-link {{ request()->is('klien-kami') ? 'active' : '' }}">Klien Kami</a></li>
+            <li><a href="{{ route('tentang-kami') }}" class="mobile-link {{ request()->routeIs('tentang-kami') ? 'active' : '' }}">Tentang Kami</a></li>
+            <li><a href="{{ route('layanan-kami') }}" class="mobile-link {{ request()->routeIs('layanan-kami') ? 'active' : '' }}">Layanan Kami</a></li>
+            <li><a href="{{ route('informasi') }}" class="mobile-link {{ request()->routeIs('informasi') ? 'active' : '' }}">Informasi</a></li>
+            <li><a href="{{ route('klien-kami') }}" class="mobile-link {{ request()->routeIs('klien-kami') ? 'active' : '' }}">Klien Kami</a></li>
         </ul>
         <a href="https://wa.me/6281210874692" target="_blank" rel="noreferrer" class="btn btn-accent" style="margin: 16px 24px; display: flex; justify-content: center;">
             Hubungi Sekarang

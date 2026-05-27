@@ -25,7 +25,19 @@ document.addEventListener('DOMContentLoaded', () => {
   function getOrCreateSessionKey() {
     let key = localStorage.getItem('its_chat_session_key');
     if (!key) {
-      key = 'session_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+      // SECURITY: Use cryptographically secure random ID instead of Math.random()
+      // crypto.randomUUID() is available in all modern browsers (Chrome 92+, Firefox 95+, Safari 15.4+)
+      if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+        key = 'session_' + crypto.randomUUID();
+      } else if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+        // Fallback: generate 128 bits of crypto-random entropy
+        const arr = new Uint8Array(16);
+        crypto.getRandomValues(arr);
+        key = 'session_' + Array.from(arr, b => b.toString(16).padStart(2, '0')).join('');
+      } else {
+        // Last resort fallback for very old browsers (non-secure, but rare)
+        key = 'session_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+      }
       localStorage.setItem('its_chat_session_key', key);
     }
     return key;

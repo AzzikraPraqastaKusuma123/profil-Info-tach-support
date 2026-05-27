@@ -19,16 +19,22 @@ class AdminAuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'username' => 'required|string',
-            'password' => 'required|string',
+            'username' => 'required|string|max:255',
+            'password' => 'required|string|max:255',
         ]);
 
         $admin = Admin::where('username', $request->username)->first();
 
-        if ($admin && Hash::check($request->password, $admin->password)) {
+        // SECURITY: Always run Hash::check() even if admin not found
+        // This prevents timing attacks (attacker can't detect valid usernames by response time)
+        $passwordToCheck = $admin ? $admin->password : '$2y$12$dummyhashpaddingtomakeconstanttime....................';
+        $passwordValid = Hash::check($request->password, $passwordToCheck);
+
+        if ($admin && $passwordValid) {
+            $request->session()->regenerate();
             session([
-                'admin_id' => $admin->id,
-                'admin_name' => $admin->name,
+                'admin_id'       => $admin->id,
+                'admin_name'     => $admin->name,
                 'admin_username' => $admin->username
             ]);
             return redirect()->route('admin.dashboard')->with('success', 'Selamat datang kembali, ' . $admin->name);
@@ -37,9 +43,10 @@ class AdminAuthController extends Controller
         return back()->withErrors(['login' => 'Username atau Password salah.'])->withInput();
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        session()->forget(['admin_id', 'admin_name', 'admin_username']);
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect()->route('admin.login')->with('success', 'Anda telah berhasil keluar.');
     }
 }

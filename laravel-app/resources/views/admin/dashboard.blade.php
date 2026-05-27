@@ -461,7 +461,9 @@
                 
                 if (alertBanner && alertText) {
                     if (data.count > 0) {
-                        alertText.innerHTML = `Ada <b>${data.count}</b> sesi obrolan pengunjung yang sedang menunggu tanggapan Anda.`;
+                        // SECURITY: Parse as integer to prevent HTML injection from API response
+                        const safeCount = parseInt(data.count, 10) || 0;
+                        alertText.innerHTML = 'Ada <b>' + safeCount + '</b> sesi obrolan pengunjung yang sedang menunggu tanggapan Anda.';
                         alertBanner.style.display = 'flex';
                     } else {
                         alertBanner.style.display = 'none';

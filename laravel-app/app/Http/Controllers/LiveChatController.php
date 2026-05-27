@@ -39,15 +39,15 @@ class LiveChatController extends Controller
     {
         $this->checkAutoCloseSessions();
         $request->validate([
-            'message' => 'required|string',
+            'message' => 'required|string|max:10000', // Admin can send longer HTML-formatted messages
         ]);
 
         $session = ChatSession::findOrFail($sessionId);
         
         $msg = ChatMessage::create([
             'chat_session_id' => $session->id,
-            'sender' => 'admin',
-            'message' => $request->message
+            'sender'          => 'admin',
+            'message'         => $request->message  // Admin messages: no strip_tags (admins are trusted)
         ]);
 
         // Touch the session to update updated_at timestamp
@@ -82,14 +82,20 @@ class LiveChatController extends Controller
     {
         $this->checkAutoCloseSessions();
         $request->validate([
-            'session_key' => 'required|string',
-            'user_name' => 'nullable|string',
+            'session_key'   => 'required|string|max:200',
+            'user_name'     => 'nullable|string|max:150',
             'auto_transfer' => 'nullable|boolean',
         ]);
 
+        // SECURITY: Strip any HTML tags from visitor-provided user name
+        $sanitizedUserName = strip_tags($request->user_name ?? '');
+        if (empty($sanitizedUserName)) {
+            $sanitizedUserName = 'Pengunjung #' . substr($request->session_key, 0, 5);
+        }
+
         $session = ChatSession::firstOrCreate(
             ['session_key' => $request->session_key],
-            ['user_name' => $request->user_name ?? 'Pengunjung #' . substr($request->session_key, 0, 5)]
+            ['user_name'   => $sanitizedUserName]
         );
 
         $session->is_active = true;
@@ -103,14 +109,14 @@ class LiveChatController extends Controller
         // Insert prompt message
         ChatMessage::create([
             'chat_session_id' => $session->id,
-            'sender' => 'user',
-            'message' => $promptMessage
+            'sender'          => 'user',
+            'message'         => $promptMessage
         ]);
 
         ChatMessage::create([
             'chat_session_id' => $session->id,
-            'sender' => 'bot',
-            'message' => 'Menghubungkan ke Tim Support... Mohon tunggu sebentar, Admin akan segera membalas pesan Anda.'
+            'sender'          => 'bot',
+            'message'         => 'Menghubungkan ke Tim Support... Mohon tunggu sebentar, Admin akan segera membalas pesan Anda.'
         ]);
 
         return response()->json([
@@ -147,8 +153,8 @@ class LiveChatController extends Controller
     {
         $this->checkAutoCloseSessions();
         $request->validate([
-            'session_key' => 'required|string',
-            'message' => 'required|string',
+            'session_key' => 'required|string|max:200',
+            'message'     => 'required|string|max:5000',
         ]);
 
         $session = ChatSession::where('session_key', $request->session_key)->first();
@@ -157,10 +163,16 @@ class LiveChatController extends Controller
             return response()->json(['error' => 'Session not found'], 404);
         }
 
+        // SECURITY: Strip HTML tags from visitor messages to prevent Stored XSS
+        $sanitizedMessage = strip_tags($request->message);
+        if (empty(trim($sanitizedMessage))) {
+            return response()->json(['error' => 'Message cannot be empty after sanitization'], 422);
+        }
+
         $msg = ChatMessage::create([
             'chat_session_id' => $session->id,
-            'sender' => 'user',
-            'message' => $request->message
+            'sender'          => 'user',
+            'message'         => $sanitizedMessage
         ]);
 
         $session->touch();

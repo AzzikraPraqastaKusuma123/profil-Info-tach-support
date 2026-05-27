@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Informasi | IT Support Jabodetabek')
+@section('canonical', 'https://itsupport-jabodetabek.com/informasi')
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/Informasi.css') }}">

@@ -386,10 +386,13 @@
         </nav>
 
         <div class="sidebar-footer">
-            <a href="/admin/logout" class="logout-btn">
+            <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+            <button onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="logout-btn">
                 <i data-lucide="log-out"></i>
                 <span>Keluar</span>
-            </a>
+            </button>
         </div>
     </div>
 

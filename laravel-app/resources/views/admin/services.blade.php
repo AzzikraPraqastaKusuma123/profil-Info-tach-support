@@ -453,26 +453,31 @@
             placeholder.style.display = 'flex';
         }
 
-        // Render features
+        // Render features — SECURITY: use DOM-safe construction to prevent XSS from feature values
         container.innerHTML = '';
         if (Array.isArray(service.features) && service.features.length > 0) {
             service.features.forEach((feature, idx) => {
                 const row = document.createElement('div');
                 row.className = 'feature-input-row';
-                
-                let deleteBtnHtml = '';
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = 'features[]';
+                input.className = 'admin-input';
+                input.placeholder = 'Fitur layanan';
+                input.value = feature; // Safe: .value assignment does NOT parse as HTML
+                input.required = true;
+                row.appendChild(input);
+
                 if (idx > 0) {
-                    deleteBtnHtml = `
-                        <button type="button" class="btn-remove-feature" onclick="removeFeatureInput(this)">
-                            <i data-lucide="trash-2" style="width:16px; height:16px;"></i>
-                        </button>
-                    `;
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.type = 'button';
+                    deleteBtn.className = 'btn-remove-feature';
+                    deleteBtn.setAttribute('onclick', 'removeFeatureInput(this)');
+                    deleteBtn.innerHTML = '<i data-lucide="trash-2" style="width:16px; height:16px;"></i>';
+                    row.appendChild(deleteBtn);
                 }
 
-                row.innerHTML = `
-                    <input type="text" name="features[]" class="admin-input" placeholder="Fitur layanan" value="${feature}" required>
-                    ${deleteBtnHtml}
-                `;
                 container.appendChild(row);
             });
         } else {

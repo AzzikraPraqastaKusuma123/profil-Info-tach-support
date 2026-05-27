@@ -45,22 +45,22 @@
                 <h4 class="footer-heading">Halaman</h4>
                 <ul class="footer-links">
                     <li><a href="{{ url('/') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Home</a></li>
-                    <li><a href="{{ url('/tentang-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Tentang Kami</a></li>
-                    <li><a href="{{ url('/layanan-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Layanan Kami</a></li>
-                    <li><a href="{{ url('/informasi') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Informasi</a></li>
-                    <li><a href="{{ url('/klien-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Klien Kami</a></li>
+                    <li><a href="{{ route('tentang-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Tentang Kami</a></li>
+                    <li><a href="{{ route('layanan-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Layanan Kami</a></li>
+                    <li><a href="{{ route('informasi') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Informasi</a></li>
+                    <li><a href="{{ route('klien-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Klien Kami</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
                 <h4 class="footer-heading">Layanan Kami</h4>
                 <ul class="footer-links">
-                    <li><a href="{{ url('/layanan-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Service Laptop & PC</a></li>
-                    <li><a href="{{ url('/layanan-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Instalasi Jaringan</a></li>
-                    <li><a href="{{ url('/layanan-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Pasang CCTV</a></li>
-                    <li><a href="{{ url('/layanan-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Pembuatan Website</a></li>
-                    <li><a href="{{ url('/layanan-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Maintenance Komputer</a></li>
-                    <li><a href="{{ url('/layanan-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Konsultasi IT</a></li>
+                    <li><a href="{{ route('layanan-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Service Laptop & PC</a></li>
+                    <li><a href="{{ route('layanan-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Instalasi Jaringan</a></li>
+                    <li><a href="{{ route('layanan-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Pasang CCTV</a></li>
+                    <li><a href="{{ route('layanan-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Pembuatan Website</a></li>
+                    <li><a href="{{ route('layanan-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Maintenance Komputer</a></li>
+                    <li><a href="{{ route('layanan-kami') }}" class="footer-link"><i data-lucide="chevron-right" style="width:14px;height:14px"></i> Konsultasi IT</a></li>
                 </ul>
             </div>
 
