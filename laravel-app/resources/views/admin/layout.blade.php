@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Admin Dashboard') - PT. Info Tech Support</title>
+    <title>@yield('title', 'Admin Dashboard') - Info Tech Support</title>
+    
+    <!-- Favicon / Browser Tab Logo -->
+    <link rel="shortcut icon" href="{{ asset('logo.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('logo.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -368,10 +372,7 @@
                 <i data-lucide="wrench" class="menu-item-icon"></i>
                 <span>Layanan Kami</span>
             </a>
-            <a href="/admin/clients" class="menu-item {{ Request::is('admin/clients*') ? 'active' : '' }}">
-                <i data-lucide="users" class="menu-item-icon"></i>
-                <span>Klien Kami</span>
-            </a>
+
             <a href="/admin/information" class="menu-item {{ Request::is('admin/information*') ? 'active' : '' }}">
                 <i data-lucide="file-text" class="menu-item-icon"></i>
                 <span>Informasi/Artikel</span>
@@ -382,6 +383,14 @@
                     <span>Live Chat Console</span>
                 </span>
                 <span id="chat-nav-badge" style="display: none; background: #ef4444; color: white; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 700;">0</span>
+            </a>
+            <a href="/admin/users" class="menu-item {{ Request::is('admin/users*') ? 'active' : '' }}">
+                <i data-lucide="users-round" class="menu-item-icon"></i>
+                <span>Kelola Admin</span>
+            </a>
+            <a href="/admin/profile" class="menu-item {{ Request::is('admin/profile*') ? 'active' : '' }}">
+                <i data-lucide="user-cog" class="menu-item-icon"></i>
+                <span>Profil Admin</span>
             </a>
         </nav>
 
@@ -408,15 +417,15 @@
             </div>
 
             <div class="header-right">
-                <div class="user-profile">
-                    <div class="avatar">
+                <a href="/admin/profile" class="user-profile" style="text-decoration: none; color: inherit; transition: var(--transition);">
+                    <div class="avatar" style="transition: var(--transition);">
                         {{ strtoupper(substr(session('admin_name') ?? 'A', 0, 1)) }}
                     </div>
                     <div class="user-info">
                         <span class="user-name">{{ session('admin_name') ?? 'Admin' }}</span>
                         <span class="user-role">Administrator</span>
                     </div>
-                </div>
+                </a>
             </div>
         </header>
 

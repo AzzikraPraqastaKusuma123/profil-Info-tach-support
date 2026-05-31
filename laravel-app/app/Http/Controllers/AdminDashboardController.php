@@ -6,8 +6,11 @@ use App\Models\Service;
 use App\Models\Client;
 use App\Models\Information;
 use App\Models\ChatSession;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class AdminDashboardController extends Controller
 {
@@ -15,7 +18,6 @@ class AdminDashboardController extends Controller
     public function index()
     {
         $servicesCount = Service::count();
-        $clientsCount = Client::count();
         $articlesCount = Information::count();
         $activeChatsCount = ChatSession::where('is_active', true)->count();
 
@@ -25,7 +27,42 @@ class AdminDashboardController extends Controller
             ->limit(5)
             ->get();
 
-        return view('admin.dashboard', compact('servicesCount', 'clientsCount', 'articlesCount', 'activeChatsCount', 'recentChats'));
+        // Traffic metrics
+        $trafficToday = DB::table('visitor_logs')->whereDate('created_at', today())->count();
+        $trafficWeek = DB::table('visitor_logs')->where('created_at', '>=', now()->subDays(7))->count();
+        $trafficMonth = DB::table('visitor_logs')->where('created_at', '>=', now()->startOfMonth())->count();
+        $trafficYear = DB::table('visitor_logs')->where('created_at', '>=', now()->startOfYear())->count();
+
+        // Daily Traffic (Last 7 Days)
+        $dailyTraffic = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = today()->subDays($i);
+            $count = DB::table('visitor_logs')->whereDate('created_at', $date)->count();
+            $dailyTraffic[] = [
+                'label' => $date->translatedFormat('D, d M'),
+                'count' => $count
+            ];
+        }
+
+        // Monthly Traffic (Last 12 Months)
+        $monthlyTraffic = [];
+        for ($i = 11; $i >= 0; $i--) {
+            $monthStart = now()->startOfMonth()->subMonths($i);
+            $monthEnd = $monthStart->copy()->endOfMonth();
+            $count = DB::table('visitor_logs')
+                ->whereBetween('created_at', [$monthStart, $monthEnd])
+                ->count();
+            $monthlyTraffic[] = [
+                'label' => $monthStart->translatedFormat('M Y'),
+                'count' => $count
+            ];
+        }
+
+        return view('admin.dashboard', compact(
+            'servicesCount', 'articlesCount', 'activeChatsCount', 'recentChats',
+            'trafficToday', 'trafficWeek', 'trafficMonth', 'trafficYear',
+            'dailyTraffic', 'monthlyTraffic'
+        ));
     }
 
     // ==========================================
@@ -124,89 +161,7 @@ class AdminDashboardController extends Controller
         return redirect()->route('admin.services')->with('success', 'Layanan berhasil dihapus.');
     }
 
-    // ==========================================
-    // CLIENTS CRUD
-    // ==========================================
-    public function clientsIndex()
-    {
-        $clients = Client::all();
-        return view('admin.clients', compact('clients'));
-    }
 
-    public function clientsStore(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'industry' => 'required|string|max:255',
-            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        ]);
-
-        $logoPath = '';
-        if ($request->hasFile('logo')) {
-            $file = $request->file('logo');
-            $filename = 'client_' . time() . '.' . $file->extension();
-            // Store directly in public/clients/ directory
-            $file->move(public_path('clients'), $filename);
-            $logoPath = '/clients/' . $filename;
-        }
-
-        Client::create([
-            'name' => $request->name,
-            'industry' => $request->industry,
-            'logo' => $logoPath,
-        ]);
-
-        return redirect()->route('admin.clients')->with('success', 'Klien berhasil ditambahkan.');
-    }
-
-    public function clientsUpdate(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'industry' => 'required|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        ]);
-
-        $client = Client::findOrFail($id);
-        $logoPath = $client->logo;
-
-        if ($request->hasFile('logo')) {
-            // Delete old file if it exists and is an uploaded file
-            if (!empty($client->logo) && File::exists(public_path($client->logo))) {
-                // Keep the default sample logos, only delete dynamic client logos
-                if (str_contains($client->logo, 'client_')) {
-                    File::delete(public_path($client->logo));
-                }
-            }
-
-            $file = $request->file('logo');
-            $filename = 'client_' . time() . '.' . $file->extension();
-            $file->move(public_path('clients'), $filename);
-            $logoPath = '/clients/' . $filename;
-        }
-
-        $client->update([
-            'name' => $request->name,
-            'industry' => $request->industry,
-            'logo' => $logoPath,
-        ]);
-
-        return redirect()->route('admin.clients')->with('success', 'Klien berhasil diupdate.');
-    }
-
-    public function clientsDestroy($id)
-    {
-        $client = Client::findOrFail($id);
-
-        if (!empty($client->logo) && File::exists(public_path($client->logo))) {
-            if (str_contains($client->logo, 'client_')) {
-                File::delete(public_path($client->logo));
-            }
-        }
-
-        $client->delete();
-        return redirect()->route('admin.clients')->with('success', 'Klien berhasil dihapus.');
-    }
 
     // ==========================================
     // INFORMATION CRUD
@@ -302,5 +257,110 @@ class AdminDashboardController extends Controller
         $article->delete();
 
         return redirect()->route('admin.information')->with('success', 'Artikel berhasil dihapus.');
+    }
+
+    // ==========================================
+    // ADMINS MANAGEMENT (USERS)
+    // ==========================================
+    public function usersIndex()
+    {
+        $admins = Admin::orderBy('id', 'asc')->get();
+        return view('admin.users', compact('admins'));
+    }
+
+    public function usersStore(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string|max:255|unique:admins,username',
+            'password' => 'required|string|min:6|max:255',
+            'name' => 'required|string|max:255',
+        ]);
+
+        Admin::create([
+            'username' => strip_tags($request->username),
+            'password' => Hash::make($request->password),
+            'name' => strip_tags($request->name),
+        ]);
+
+        return redirect()->route('admin.users')->with('success', 'Admin baru berhasil ditambahkan.');
+    }
+
+    public function usersUpdatePassword(Request $request, $id)
+    {
+        $request->validate([
+            'password' => 'required|string|min:6|max:255',
+        ]);
+
+        $admin = Admin::findOrFail($id);
+        $admin->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->route('admin.users')->with('success', 'Password admin berhasil diganti.');
+    }
+
+    public function usersDestroy($id)
+    {
+        // Prevent deleting yourself!
+        if ($id == session('admin_id')) {
+            return redirect()->route('admin.users')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
+
+        $admin = Admin::findOrFail($id);
+        $admin->delete();
+
+        return redirect()->route('admin.users')->with('success', 'Akun admin berhasil dihapus.');
+    }
+
+    // ==========================================
+    // ADMIN PROFILE
+    // ==========================================
+    public function profileIndex()
+    {
+        $admin = Admin::findOrFail(session('admin_id'));
+        return view('admin.profile', compact('admin'));
+    }
+
+    public function profileUpdate(Request $request)
+    {
+        $adminId = session('admin_id');
+        $request->validate([
+            'username' => 'required|string|max:255|unique:admins,username,' . $adminId,
+            'name' => 'required|string|max:255',
+        ]);
+
+        $admin = Admin::findOrFail($adminId);
+        $admin->update([
+            'username' => strip_tags($request->username),
+            'name' => strip_tags($request->name),
+        ]);
+
+        // Instantly update active session
+        session([
+            'admin_name' => $admin->name,
+            'admin_username' => $admin->username
+        ]);
+
+        return redirect()->route('admin.profile')->with('success', 'Profil Anda berhasil diperbarui.');
+    }
+
+    public function profileUpdatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:6|max:255|confirmed',
+        ]);
+
+        $admin = Admin::findOrFail(session('admin_id'));
+
+        if (!Hash::check($request->current_password, $admin->password)) {
+            return redirect()->route('admin.profile')->with('error', 'Password saat ini salah.');
+        }
+
+        $admin->update([
+            'password' => Hash::make($request->new_password),
+        ]);
+
+        return redirect()->route('admin.profile')->with('success', 'Password Anda berhasil diubah.');
     }
 }

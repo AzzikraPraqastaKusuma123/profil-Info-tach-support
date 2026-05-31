@@ -6,6 +6,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Jasa IT Support Jabodetabek | Maintenance Komputer, Server, CCTV & Jaringan Kantor')</title>
     
+    <!-- Favicon / Browser Tab Logo -->
+    <link rel="shortcut icon" href="{{ asset('logo.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('logo.png') }}" type="image/png">
+    
     <!-- SEO Meta Tags -->
     <meta name="description" content="PT Info Tech Support Jabodetabek menyediakan jasa IT Support profesional untuk perusahaan di Jakarta, Bekasi, Bogor, Depok dan Tangerang. Layanan maintenance komputer, server, jaringan, CCTV, Mikrotik, helpdesk dan outsourcing IT.">
     <meta name="keywords" content="IT Support Jakarta, IT Support Bekasi, IT Support Bogor, IT Support Depok, IT Support Tangerang, Maintenance Komputer, Jasa IT Support, Outsourcing IT Support, Maintenance Server, Jasa Mikrotik, Instalasi CCTV">

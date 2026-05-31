@@ -119,6 +119,24 @@
     <!-- ── Vision & Mission ── -->
     <section class="section vm-section">
         <div class="container">
+            <!-- Director Quote Section -->
+            <div class="director-quote-container reveal" style="margin-bottom: 80px;">
+                <div class="director-photo-wrapper">
+                    <img src="{{ asset('direktur/direktur2.png') }}" alt="Raden Ade Ahmad Suryana - Formal" class="director-photo active" id="director-formal">
+                    <img src="{{ asset('direktur/direktur.png') }}" alt="Raden Ade Ahmad Suryana - Santai" class="director-photo" id="director-casual">
+                </div>
+                <div class="director-quote-content">
+                    <i data-lucide="quote" class="director-quote-icon"></i>
+                    <blockquote class="director-quote-text">
+                        "Di IT Support Jabodetabek, kami percaya bahwa teknologi yang hebat adalah teknologi yang berjalan dengan andal dan tanpa hambatan. Fokus kami bukan hanya menyelesaikan masalah, tetapi juga mencegah potensi gangguan melalui sistem pemeliharaan yang terukur dan menghadirkan solusi yang tepat agar bisnis berjalan lebih optimal."
+                    </blockquote>
+                    <div class="director-info">
+                        <span class="director-name">Raden Ade Ahmad Suryana</span>
+                        <span class="director-title">IT Director</span>
+                    </div>
+                </div>
+            </div>
+
             <div class="section-header reveal">
                 <div class="badge">Visi &amp; Misi</div>
                 <h2>Arah dan Tujuan Kami</h2>
@@ -144,24 +162,6 @@
                         <li>Terus berinovasi mengikuti perkembangan teknologi terkini.</li>
                         <li>Membangun hubungan jangka panjang yang saling menguntungkan bersama klien.</li>
                     </ul>
-                </div>
-            </div>
-
-            <!-- Director Quote Section -->
-            <div class="director-quote-container reveal">
-                <div class="director-photo-wrapper">
-                    <img src="{{ asset('direktur/direktur2.png') }}" alt="Raden Ade Ahmad Suryana - Formal" class="director-photo active" id="director-formal">
-                    <img src="{{ asset('direktur/direktur.png') }}" alt="Raden Ade Ahmad Suryana - Santai" class="director-photo" id="director-casual">
-                </div>
-                <div class="director-quote-content">
-                    <i data-lucide="quote" class="director-quote-icon"></i>
-                    <blockquote class="director-quote-text">
-                        "Di IT Support Jabodetabek, kami percaya bahwa teknologi yang hebat adalah teknologi yang berjalan dengan andal dan tanpa hambatan. Fokus kami bukan hanya menyelesaikan masalah, tetapi juga mencegah potensi gangguan melalui sistem pemeliharaan yang terukur dan menghadirkan solusi yang tepat agar bisnis berjalan lebih optimal."
-                    </blockquote>
-                    <div class="director-info">
-                        <span class="director-name">Raden Ade Ahmad Suryana</span>
-                        <span class="director-title">IT Director</span>
-                    </div>
                 </div>
             </div>
         </div>

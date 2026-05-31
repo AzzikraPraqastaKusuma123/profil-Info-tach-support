@@ -22,33 +22,43 @@ class InitialDatabaseSeeder extends Seeder
         // 2. Seed Services
         $services = [
             [
-                "icon" => "monitor", "title" => "Service Laptop & PC", "category" => "Hardware",
-                "desc" => "Kami menangani berbagai kerusakan laptop dan PC dengan penanganan cepat dan bergaransi. Dipercaya oleh ratusan pengguna di Jabodetabek.",
-                "features" => json_encode(["Ganti LCD/LED", "Upgrade RAM & SSD", "Perbaikan Motherboard", "Install Ulang OS", "Cleaning & Servis Berkala", "Penggantian Baterai"])
+                "icon" => "laptop", "title" => "Service Laptop & PC", "category" => "Hardware",
+                "desc" => "Layanan maintenance dan perbaikan laptop serta PC bertujuan untuk menjaga performa perangkat kerja karyawan agar tetap optimal dan produktif.",
+                "features" => json_encode(["Pembersihan sistem & Debu", "Update Windows & OS", "Instalasi software & OS", "Backup data berkala", "Optimasi performa & RAM", "Pembersihan virus & malware", "Penggantian hardware rusak", "Upgrade RAM dan SSD"])
             ],
             [
-                "icon" => "wifi", "title" => "Instalasi Jaringan", "category" => "Network",
-                "desc" => "Pemasangan dan konfigurasi jaringan LAN/WiFi untuk rumah, kantor, dan gedung komersial dengan perangkat berkualitas tinggi.",
-                "features" => json_encode(["Setting Router & Switch", "Instalasi Kabel LAN CAT6", "Konfigurasi WiFi Enterprise", "VPN Setup", "Network Monitoring", "Troubleshooting Jaringan"])
+                "icon" => "server", "title" => "Maintenance Server", "category" => "Maintenance",
+                "desc" => "Server merupakan pusat penyimpanan data perusahaan. Layanan kami membantu menjaga server tetap aman, stabil, dan berkinerja optimal.",
+                "features" => json_encode(["Instalasi Windows Server", "Instalasi Linux Server", "Setup Active Directory", "DNS & DHCP Server", "File Server & Sharing", "Backup Server & Cloud", "Monitoring Server 24/7", "Virtualisasi Server (VMware/Hyper-V)", "Maintenance Server Berkala"])
             ],
             [
-                "icon" => "camera", "title" => "Pasang CCTV", "category" => "Security",
-                "desc" => "Instalasi CCTV profesional untuk keamanan rumah, toko, kantor, dan area publik dengan kamera resolusi tinggi dan bisa dipantau jarak jauh.",
-                "features" => json_encode(["CCTV Indoor & Outdoor", "Resolusi HD/Full HD/4K", "Pemantauan via Smartphone", "DVR & NVR Setup", "Kabel & Aksesoris Lengkap", "Garansi Instalasi"])
+                "icon" => "network", "title" => "Instalasi & Konfigurasi Jaringan", "category" => "Network",
+                "desc" => "Jaringan komputer yang stabil merupakan kebutuhan utama operasional bisnis modern. Kami memastikan konektivitas berjalan optimal.",
+                "features" => json_encode(["Instalasi LAN & Kabel UTP", "Instalasi Fiber Optic (FO)", "Penarikan Kabel Struktur", "Konfigurasi Switch", "Konfigurasi Router Jaringan", "Instalasi Access Point (WiFi)", "Manajemen Bandwidth", "VPN Enterprise & Remote", "Monitoring Jaringan"])
             ],
             [
-                "icon" => "globe", "title" => "Pembuatan Website", "category" => "Digital",
-                "desc" => "Desain dan pengembangan website profesional yang responsif, cepat, dan SEO-friendly untuk meningkatkan eksistensi bisnis Anda secara online.",
-                "features" => json_encode(["Website Company Profile", "Landing Page", "Website Toko Online", "Sistem Informasi Custom", "Domain & Hosting", "Maintenance Berkala"])
+                "icon" => "settings-2", "title" => "Instalasi & Setting Mikrotik", "category" => "Network",
+                "desc" => "Layanan konfigurasi perangkat Mikrotik untuk mengoptimalkan pembagian bandwidth, keamanan, dan failover internet perusahaan Anda.",
+                "features" => json_encode(["Load Balancing (Dual ISP)", "Failover Auto-Switching", "Hotspot & User Management", "Virtual LAN (VLAN)", "VPN & Tunneling", "Firewall & Web Filtering", "Quality of Service (QoS)", "Traffic Monitoring", "Bandwidth Management"])
             ],
             [
-                "icon" => "wrench", "title" => "Maintenance IT", "category" => "Maintenance",
-                "desc" => "Layanan perawatan rutin perangkat komputer dan infrastruktur jaringan untuk memastikan sistem IT Anda selalu berjalan optimal dan bebas masalah.",
-                "features" => json_encode(["Perawatan PC Berkala", "Update Software & Antivirus", "Backup Data Rutin", "Monitoring Jaringan", "Penanganan Masalah Cepat", "Laporan Bulanan"])
+                "icon" => "shield-check", "title" => "Instalasi CCTV HD", "category" => "Security",
+                "desc" => "Keamanan fisik adalah aspek penting operasional. Kami menyediakan solusi pengawasan modern yang dapat dipantau dari mana saja.",
+                "features" => json_encode(["Survey Lokasi & Desain Titik", "Instalasi Kamera HD & IP Cam", "Konfigurasi DVR / NVR", "Remote Monitoring Smartphone", "Integrasi Jaringan CCTV", "Maintenance CCTV Rutin", "Troubleshooting & Repair"])
             ],
             [
-                "icon" => "headphones", "title" => "Konsultasi IT", "category" => "Consulting",
-                "desc" => "Dapatkan saran dan rekomendasi ahli untuk kebutuhan infrastruktur IT bisnis Anda. Kami membantu Anda membuat keputusan teknologi yang tepat.",
+                "icon" => "users", "title" => "Outsourcing IT Support", "category" => "Consulting",
+                "desc" => "Kami menyediakan tenaga IT profesional outsourcing untuk membantu perusahaan menghemat biaya operasional tanpa mengurangi kualitas dukungan IT.",
+                "features" => json_encode(["IT Helpdesk Support", "Desktop Support Technician", "Network Support Specialist", "System Administrator", "Technical Support Engineer", "Onsite & Remote IT Officer"])
+            ],
+            [
+                "icon" => "code-2", "title" => "Pembuatan Website", "category" => "Digital",
+                "desc" => "Desain & pengembangan website profesional, responsif, cepat, dan SEO-friendly untuk meningkatkan eksistensi bisnis online Anda secara global.",
+                "features" => json_encode(["Website Company Profile", "Landing Page Penjualan", "Website Toko Online", "Sistem Informasi Custom", "Domain & Hosting Dedicated", "Maintenance Website Berkala"])
+            ],
+            [
+                "icon" => "headphones", "title" => "Konsultasi IT & Audit", "category" => "Consulting",
+                "desc" => "Dapatkan rekomendasi ahli untuk infrastruktur IT dan rencana digitalisasi jangka panjang bisnis Anda agar berjalan efektif dan efisien.",
                 "features" => json_encode(["Analisis Kebutuhan IT", "Perencanaan Infrastruktur", "Rekomendasi Perangkat", "Audit Keamanan Jaringan", "Optimasi Sistem", "Pendampingan Proyek IT"])
             ]
         ];

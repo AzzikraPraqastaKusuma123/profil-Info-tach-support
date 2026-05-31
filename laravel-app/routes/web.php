@@ -74,11 +74,7 @@ Route::middleware([AdminAuthMiddleware::class])->prefix('admin')->name('admin.')
     Route::post('/services/{id}/update', [AdminDashboardController::class, 'servicesUpdate'])->name('services.update');
     Route::post('/services/{id}/delete', [AdminDashboardController::class, 'servicesDestroy'])->name('services.delete');
 
-    // Clients CRUD
-    Route::get('/clients', [AdminDashboardController::class, 'clientsIndex'])->name('clients');
-    Route::post('/clients', [AdminDashboardController::class, 'clientsStore'])->name('clients.store');
-    Route::post('/clients/{id}/update', [AdminDashboardController::class, 'clientsUpdate'])->name('clients.update');
-    Route::post('/clients/{id}/delete', [AdminDashboardController::class, 'clientsDestroy'])->name('clients.delete');
+
 
     // Information CRUD
     Route::get('/information', [AdminDashboardController::class, 'infoIndex'])->name('information');
@@ -93,4 +89,15 @@ Route::middleware([AdminAuthMiddleware::class])->prefix('admin')->name('admin.')
     Route::get('/chat/sessions/{id}/messages', [LiveChatController::class, 'getSessionMessages'])->name('chat.messages');
     Route::post('/chat/sessions/{id}/send', [LiveChatController::class, 'sendAdminMessage'])->name('chat.send');
     Route::post('/chat/sessions/{id}/takeover', [LiveChatController::class, 'toggleTakeover'])->name('chat.takeover');
+
+    // Admin Management (Users)
+    Route::get('/users', [AdminDashboardController::class, 'usersIndex'])->name('users');
+    Route::post('/users', [AdminDashboardController::class, 'usersStore'])->name('users.store');
+    Route::post('/users/{id}/update-password', [AdminDashboardController::class, 'usersUpdatePassword'])->name('users.update-password');
+    Route::post('/users/{id}/delete', [AdminDashboardController::class, 'usersDestroy'])->name('users.delete');
+
+    // Admin Profile
+    Route::get('/profile', [AdminDashboardController::class, 'profileIndex'])->name('profile');
+    Route::post('/profile/update', [AdminDashboardController::class, 'profileUpdate'])->name('profile.update');
+    Route::post('/profile/update-password', [AdminDashboardController::class, 'profileUpdatePassword'])->name('profile.update-password');
 });

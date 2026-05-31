@@ -13,9 +13,16 @@ class Admin extends Authenticatable
         'username',
         'password',
         'name',
+        'last_login_at',
+        'last_logout_at',
     ];
 
     protected $hidden = [
         'password',
+    ];
+
+    protected $casts = [
+        'last_login_at'  => 'datetime',
+        'last_logout_at' => 'datetime',
     ];
 }

@@ -71,10 +71,11 @@
             <div class="process-grid">
                 @php
                     $process = [
-                        ["num" => "01", "title" => "Hubungi Kami", "desc" => "Hubungi kami melalui WhatsApp, telepon, atau email untuk konsultasi kebutuhan Anda."],
-                        ["num" => "02", "title" => "Analisis & Solusi", "desc" => "Tim kami akan menganalisis kebutuhan dan memberikan penawaran solusi terbaik secara transparan."],
-                        ["num" => "03", "title" => "Pengerjaan", "desc" => "Teknisi kami mengerjakan proyek dengan standar kualitas tinggi dan tepat waktu."],
-                        ["num" => "04", "title" => "Garansi & Support", "desc" => "Pekerjaan selesai disertai garansi dan dukungan purna jual yang responsif."]
+                        ["num" => "01", "title" => "Konsultasi", "desc" => "Kami mendengarkan serta memahami kebutuhan teknologi informasi perusahaan Anda dan melakukan analisa awal."],
+                        ["num" => "02", "title" => "Survey Lokasi", "desc" => "Tim teknisi ahli kami melakukan kunjungan langsung untuk pengecekan detail kondisi infrastruktur IT kantor Anda."],
+                        ["num" => "03", "title" => "Implementasi", "desc" => "Pemasangan perangkat baru, migrasi sistem, konfigurasi server, serta optimasi jaringan diselesaikan dengan standar tinggi."],
+                        ["num" => "04", "title" => "Monitoring", "desc" => "Sistem dipantau secara berkala menggunakan tools monitoring canggih untuk menjamin seluruh layanan berjalan lancar."],
+                        ["num" => "05", "title" => "Maintenance Berkala", "desc" => "Kami memberikan perawatan rutin (preventive maintenance) bulanan guna menjaga stabilitas jangka panjang sistem perusahaan Anda."]
                     ];
                 @endphp
                 @foreach($process as $p)

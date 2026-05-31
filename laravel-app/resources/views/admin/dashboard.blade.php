@@ -317,16 +317,7 @@
         </div>
     </div>
 
-    <!-- Clients Metric -->
-    <div class="metric-card metric-clients">
-        <div class="metric-card-info">
-            <h3>Klien Kami</h3>
-            <div class="value">{{ $clientsCount }}</div>
-        </div>
-        <div class="metric-icon-box">
-            <i data-lucide="users" style="width: 24px; height: 24px;"></i>
-        </div>
-    </div>
+
 
     <!-- Articles Metric -->
     <div class="metric-card metric-articles">
@@ -349,6 +340,71 @@
             <i data-lucide="message-square" style="width: 24px; height: 24px;"></i>
             <div class="badge-pulse" id="dashboard-active-chats-pulse" style="{{ $activeChatsCount > 0 ? '' : 'display: none;' }}"></div>
         </div>
+    </div>
+</div>
+
+<!-- ── Traffic Metrics Grid ── -->
+<div class="metrics-grid" style="margin-bottom: 32px;">
+    <!-- Traffic Today -->
+    <div class="metric-card" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.08), rgba(10, 22, 40, 0.5)); border-color: rgba(6, 182, 212, 0.15);">
+        <div class="metric-card-info">
+            <h3 style="color: rgba(6, 182, 212, 0.8);">Trafik Hari Ini</h3>
+            <div class="value">{{ $trafficToday }}</div>
+        </div>
+        <div class="metric-icon-box" style="background: rgba(6, 182, 212, 0.12); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.25);">
+            <i data-lucide="eye" style="width: 24px; height: 24px;"></i>
+        </div>
+    </div>
+
+    <!-- Traffic Week -->
+    <div class="metric-card" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(10, 22, 40, 0.5)); border-color: rgba(168, 85, 247, 0.15);">
+        <div class="metric-card-info">
+            <h3 style="color: rgba(168, 85, 247, 0.8);">Trafik Minggu Ini</h3>
+            <div class="value">{{ $trafficWeek }}</div>
+        </div>
+        <div class="metric-icon-box" style="background: rgba(168, 85, 247, 0.12); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.25);">
+            <i data-lucide="calendar" style="width: 24px; height: 24px;"></i>
+        </div>
+    </div>
+
+    <!-- Traffic Month -->
+    <div class="metric-card" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.08), rgba(10, 22, 40, 0.5)); border-color: rgba(236, 72, 153, 0.15);">
+        <div class="metric-card-info">
+            <h3 style="color: rgba(236, 72, 153, 0.8);">Trafik Bulan Ini</h3>
+            <div class="value">{{ $trafficMonth }}</div>
+        </div>
+        <div class="metric-icon-box" style="background: rgba(236, 72, 153, 0.12); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.25);">
+            <i data-lucide="trending-up" style="width: 24px; height: 24px;"></i>
+        </div>
+    </div>
+
+    <!-- Traffic Year -->
+    <div class="metric-card" style="background: linear-gradient(135deg, rgba(14, 165, 233, 0.08), rgba(10, 22, 40, 0.5)); border-color: rgba(14, 165, 233, 0.15);">
+        <div class="metric-card-info">
+            <h3 style="color: rgba(14, 165, 233, 0.8);">Trafik Tahun Ini</h3>
+            <div class="value">{{ $trafficYear }}</div>
+        </div>
+        <div class="metric-icon-box" style="background: rgba(14, 165, 233, 0.12); color: #38bdf8; border: 1px solid rgba(14, 165, 233, 0.25);">
+            <i data-lucide="globe" style="width: 24px; height: 24px;"></i>
+        </div>
+    </div>
+</div>
+
+<!-- ── Traffic Chart Panel ── -->
+<div class="glass-panel animate-fadeInUp" style="margin-bottom: 32px; animation-delay: 0.1s;">
+    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 14px; margin-bottom: 0;">
+        <h2 style="font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+            <i data-lucide="bar-chart-3" style="color: #22d3ee; width: 22px; height: 22px;"></i>
+            <span>Grafik Lalu Lintas Pengunjung (Traffic Analytics)</span>
+        </h2>
+        <div class="chart-switcher-tabs" style="display: flex; gap: 8px;">
+            <button type="button" class="btn btn-outline" id="btn-chart-daily" style="padding: 6px 14px; font-size: 0.8rem; border-radius: 6px; background: rgba(59, 130, 246, 0.1); border-color: rgba(59,130,246,0.3); cursor: pointer;">Trafik Harian</button>
+            <button type="button" class="btn btn-outline" id="btn-chart-monthly" style="padding: 6px 14px; font-size: 0.8rem; border-radius: 6px; cursor: pointer;">Trafik Bulanan</button>
+        </div>
+    </div>
+    
+    <div style="position: relative; height: 320px; width: 100%; margin-top: 24px;">
+        <canvas id="trafficChart"></canvas>
     </div>
 </div>
 
@@ -448,7 +504,115 @@
 @endsection
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // ── CHART.JS TRAFFIC CONFIG ──
+        const dailyData = {
+            labels: @json(array_column($dailyTraffic, 'label')),
+            datasets: [{
+                label: 'Jumlah Kunjungan (Hits)',
+                data: @json(array_column($dailyTraffic, 'count')),
+                borderColor: '#22d3ee',
+                backgroundColor: 'rgba(6, 182, 212, 0.08)',
+                borderWidth: 3,
+                tension: 0.35,
+                fill: true,
+                pointBackgroundColor: '#22d3ee',
+                pointBorderColor: '#070f1e',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        };
+
+        const monthlyData = {
+            labels: @json(array_column($monthlyTraffic, 'label')),
+            datasets: [{
+                label: 'Jumlah Kunjungan (Hits)',
+                data: @json(array_column($monthlyTraffic, 'count')),
+                borderColor: '#c084fc',
+                backgroundColor: 'rgba(168, 85, 247, 0.08)',
+                borderWidth: 3,
+                tension: 0.35,
+                fill: true,
+                pointBackgroundColor: '#c084fc',
+                pointBorderColor: '#070f1e',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        };
+
+        const ctx = document.getElementById('trafficChart').getContext('2d');
+        let trafficChart = new Chart(ctx, {
+            type: 'line',
+            data: dailyData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#0b1528',
+                        titleColor: '#fff',
+                        bodyColor: '#e2e8f0',
+                        borderColor: 'rgba(255, 255, 255, 0.08)',
+                        borderWidth: 1,
+                        padding: 12,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + ' Kunjungan';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                        ticks: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans' } }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                        ticks: { 
+                            color: '#94a3b8', 
+                            precision: 0,
+                            font: { family: 'Plus Jakarta Sans' }
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Switcher Buttons
+        const btnDaily = document.getElementById('btn-chart-daily');
+        const btnMonthly = document.getElementById('btn-chart-monthly');
+
+        if (btnDaily && btnMonthly) {
+            btnDaily.addEventListener('click', () => {
+                btnDaily.style.background = 'rgba(59, 130, 246, 0.1)';
+                btnDaily.style.borderColor = 'rgba(59, 130, 246, 0.3)';
+                btnMonthly.style.background = 'transparent';
+                btnMonthly.style.borderColor = 'var(--border-glass)';
+                
+                trafficChart.data = dailyData;
+                trafficChart.update();
+            });
+
+            btnMonthly.addEventListener('click', () => {
+                btnMonthly.style.background = 'rgba(59, 130, 246, 0.1)';
+                btnMonthly.style.borderColor = 'rgba(59, 130, 246, 0.3)';
+                btnDaily.style.background = 'transparent';
+                btnDaily.style.borderColor = 'var(--border-glass)';
+                
+                trafficChart.data = monthlyData;
+                trafficChart.update();
+            });
+        }
+    });
+
     // Real-time notification check on Dashboard
     async function checkDashboardPendingChats() {
         try {
