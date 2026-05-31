@@ -571,14 +571,14 @@
                 scales: {
                     x: {
                         grid: { color: 'rgba(255, 255, 255, 0.03)' },
-                        ticks: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans' } }
+                        ticks: { color: '#94a3b8', font: { family: 'Inter' } }
                     },
                     y: {
                         grid: { color: 'rgba(255, 255, 255, 0.03)' },
                         ticks: { 
                             color: '#94a3b8', 
                             precision: 0,
-                            font: { family: 'Plus Jakarta Sans' }
+                            font: { family: 'Inter' }
                         },
                         beginAtZero: true
                     }

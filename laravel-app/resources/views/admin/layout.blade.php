@@ -23,7 +23,7 @@
         body {
             background-color: var(--admin-bg);
             color: var(--white);
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
             min-height: 100vh;
             display: flex;
             overflow-x: hidden;
