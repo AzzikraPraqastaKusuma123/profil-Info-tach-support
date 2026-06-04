@@ -52,7 +52,7 @@
             <div class="hero-visual animate-float">
                 <div class="hero-image-wrapper">
                     @for($i = 1; $i <= 10; $i++)
-                        <img src="{{ asset('home-page/'.$i.'.png') }}" alt="Kegiatan IT Support {{ $i }}" class="hero-img-main {{ $i == 1 ? 'active' : '' }}" />
+                        <img src="{{ asset('home-page/'.$i.'.png') }}" alt="Kegiatan IT Support {{ $i }}" class="hero-img-main {{ $i == 1 ? 'active' : '' }}" style="{{ $i == 1 || $i == 2 ? 'object-position: center 12%;' : '' }}" />
                     @endfor
                     <div class="hero-image-overlay"></div>
                     
