@@ -372,6 +372,10 @@
                 <i data-lucide="wrench" class="menu-item-icon"></i>
                 <span>Layanan Kami</span>
             </a>
+            <a href="/admin/clients" class="menu-item {{ Request::is('admin/clients*') ? 'active' : '' }}">
+                <i data-lucide="users" class="menu-item-icon"></i>
+                <span>Logo Mitra Klien</span>
+            </a>
 
             <a href="/admin/information" class="menu-item {{ Request::is('admin/information*') ? 'active' : '' }}">
                 <i data-lucide="file-text" class="menu-item-icon"></i>

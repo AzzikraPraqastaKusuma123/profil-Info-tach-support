@@ -74,6 +74,12 @@ Route::middleware([AdminAuthMiddleware::class])->prefix('admin')->name('admin.')
     Route::post('/services/{id}/update', [AdminDashboardController::class, 'servicesUpdate'])->name('services.update');
     Route::post('/services/{id}/delete', [AdminDashboardController::class, 'servicesDestroy'])->name('services.delete');
 
+    // Clients CRUD
+    Route::get('/clients', [AdminDashboardController::class, 'clientsIndex'])->name('clients');
+    Route::post('/clients', [AdminDashboardController::class, 'clientsStore'])->name('clients.store');
+    Route::post('/clients/{id}/update', [AdminDashboardController::class, 'clientsUpdate'])->name('clients.update');
+    Route::post('/clients/{id}/delete', [AdminDashboardController::class, 'clientsDestroy'])->name('clients.delete');
+
 
 
     // Information CRUD

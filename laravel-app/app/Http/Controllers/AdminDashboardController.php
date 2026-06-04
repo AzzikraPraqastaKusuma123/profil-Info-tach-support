@@ -334,4 +334,88 @@ class AdminDashboardController extends Controller
 
         return redirect()->route('admin.profile')->with('success', 'Password Anda berhasil diubah.');
     }
+
+    // ==========================================
+    // CLIENTS CRUD
+    // ==========================================
+    public function clientsIndex()
+    {
+        $clients = Client::all();
+        return view('admin.clients', compact('clients'));
+    }
+
+    public function clientsStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'industry' => 'required|string|max:255',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ]);
+
+        $logoPath = null;
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $filename = 'client_' . time() . '.' . $file->extension();
+            $file->move(public_path('clients'), $filename);
+            $logoPath = '/clients/' . $filename;
+        }
+
+        Client::create([
+            'name' => strip_tags($request->name),
+            'industry' => strip_tags($request->industry),
+            'logo' => $logoPath,
+        ]);
+
+        return redirect()->route('admin.clients')->with('success', 'Mitra klien berhasil ditambahkan.');
+    }
+
+    public function clientsUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'industry' => 'required|string|max:255',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ]);
+
+        $client = Client::findOrFail($id);
+        $logoPath = $client->logo;
+
+        if ($request->hasFile('logo')) {
+            // Delete old logo file if it exists and starts with /clients/client_
+            if (!empty($client->logo) && File::exists(public_path($client->logo))) {
+                if (str_contains($client->logo, 'client_')) {
+                    File::delete(public_path($client->logo));
+                }
+            }
+
+            $file = $request->file('logo');
+            $filename = 'client_' . time() . '.' . $file->extension();
+            $file->move(public_path('clients'), $filename);
+            $logoPath = '/clients/' . $filename;
+        }
+
+        $client->update([
+            'name' => strip_tags($request->name),
+            'industry' => strip_tags($request->industry),
+            'logo' => $logoPath,
+        ]);
+
+        return redirect()->route('admin.clients')->with('success', 'Mitra klien berhasil diperbarui.');
+    }
+
+    public function clientsDestroy($id)
+    {
+        $client = Client::findOrFail($id);
+
+        // Delete logo file if it exists and starts with /clients/client_
+        if (!empty($client->logo) && File::exists(public_path($client->logo))) {
+            if (str_contains($client->logo, 'client_')) {
+                File::delete(public_path($client->logo));
+            }
+        }
+
+        $client->delete();
+
+        return redirect()->route('admin.clients')->with('success', 'Mitra klien berhasil dihapus.');
+    }
 }
