@@ -13,7 +13,7 @@ class InitialDatabaseSeeder extends Seeder
         // 1. Seed Admin
         DB::table('admins')->insert([
             'username' => 'admin',
-            'password' => Hash::make('admin123'),
+            'password' => Hash::make('jakarta25!'),
             'name' => 'Administrator PT. ITS',
             'created_at' => now(),
             'updated_at' => now(),
