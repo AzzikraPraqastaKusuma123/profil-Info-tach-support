@@ -50,7 +50,7 @@ return [
     |
     */
 
-    'channels' => [
+    'cha nnels' => [
 
         'stack' => [
             'driver' => 'stack',

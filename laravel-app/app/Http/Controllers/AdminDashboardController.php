@@ -28,40 +28,11 @@ class AdminDashboardController extends Controller
             ->get();
 
         // Traffic metrics
-        $trafficToday = DB::table('visitor_logs')->whereDate('created_at', today())->count();
-        $trafficWeek = DB::table('visitor_logs')->where('created_at', '>=', now()->subDays(7))->count();
-        $trafficMonth = DB::table('visitor_logs')->where('created_at', '>=', now()->startOfMonth())->count();
         $trafficYear = DB::table('visitor_logs')->where('created_at', '>=', now()->startOfYear())->count();
-
-        // Daily Traffic (Last 7 Days)
-        $dailyTraffic = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $date = today()->subDays($i);
-            $count = DB::table('visitor_logs')->whereDate('created_at', $date)->count();
-            $dailyTraffic[] = [
-                'label' => $date->translatedFormat('D, d M'),
-                'count' => $count
-            ];
-        }
-
-        // Monthly Traffic (Last 12 Months)
-        $monthlyTraffic = [];
-        for ($i = 11; $i >= 0; $i--) {
-            $monthStart = now()->startOfMonth()->subMonths($i);
-            $monthEnd = $monthStart->copy()->endOfMonth();
-            $count = DB::table('visitor_logs')
-                ->whereBetween('created_at', [$monthStart, $monthEnd])
-                ->count();
-            $monthlyTraffic[] = [
-                'label' => $monthStart->translatedFormat('M Y'),
-                'count' => $count
-            ];
-        }
 
         return view('admin.dashboard', compact(
             'servicesCount', 'articlesCount', 'activeChatsCount', 'recentChats',
-            'trafficToday', 'trafficWeek', 'trafficMonth', 'trafficYear',
-            'dailyTraffic', 'monthlyTraffic'
+            'trafficYear'
         ));
     }
 
