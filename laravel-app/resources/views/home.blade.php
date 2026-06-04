@@ -353,10 +353,10 @@
                         <i data-lucide="globe" style="width:16px;height:16px"></i> Semua JABODETABEK
                     </button>
                     <button type="button" class="map-switch-btn" data-region="bekasi">
-                        <i class="region-dot-indicator bekasi"></i> Kantor 1: Bekasi
+                        <i class="region-dot-indicator bekasi"></i> Project Office Bekasi
                     </button>
                     <button type="button" class="map-switch-btn" data-region="jakarta">
-                        <i class="region-dot-indicator jakarta"></i> Kantor 2: Jakarta Barat
+                        <i class="region-dot-indicator jakarta"></i> Project Office Jakarta Barat
                     </button>
                 </div>
             </div>
@@ -608,7 +608,7 @@
                 title: "Layanan IT Support Seluruh Jabodetabek",
                 badge: "Seluruh JABODETABEK",
                 desc: "PT Info Tech Support Jabodetabek melayani seluruh area Jakarta, Bogor, Depok, Tangerang, dan Bekasi dengan jaminan response time di bawah 1 jam. Silakan pilih tombol di atas untuk melihat detail kantor operasional dan cakupan layanan.",
-                address: "Kantor 1 (Bekasi Pusat) & Kantor 2 (Jakarta Barat)",
+                address: "Project Office Bekasi & Project Office Jakarta Barat",
                 response: "< 1 Jam (Teknisi Siaga Terdekat)",
                 mapsLink: "https://www.google.com/maps/place/IT+Support+Jabodetabek",
                 waLink: "https://wa.me/6281210874692?text=Halo%20IT%20Support%20Jabodetabek,%20saya%20memerlukan%20layanan%20IT%20Support%20di%20area%20saya",
@@ -729,7 +729,7 @@
                 icon: createPulseIcon('bekasi-pulse')
             }).addTo(map).bindPopup(`
                 <div class="map-popup-premium">
-                    <h4 style="color:#06b6d4; font-weight:800; margin:0 0 6px 0;">Kantor 1: PT Info Tech Support (Pusat)</h4>
+                    <h4 style="color:#06b6d4; font-weight:800; margin:0 0 6px 0;">Project Office Bekasi</h4>
                     <p style="margin:0 0 10px 0; font-size:0.85rem; color:#475569;">Jl.Durian Blok CR 6 Jatiasih, Bekasi Selatan</p>
                     <a href="${regionsData.bekasi.mapsLink}" target="_blank" style="display:inline-block; background:#06b6d4; color:#fff; padding:6px 12px; border-radius:6px; font-size:0.75rem; text-decoration:none; font-weight:700;">Buka Google Maps &rarr;</a>
                 </div>
@@ -740,7 +740,7 @@
                 icon: createPulseIcon('jakarta-pulse')
             }).addTo(map).bindPopup(`
                 <div class="map-popup-premium">
-                    <h4 style="color:#3b82f6; font-weight:800; margin:0 0 6px 0;">Kantor 2: Cabang Jakarta Barat</h4>
+                    <h4 style="color:#3b82f6; font-weight:800; margin:0 0 6px 0;">Project Office Jakarta Barat</h4>
                     <p style="margin:0 0 10px 0; font-size:0.85rem; color:#475569;">Komp. SMA Islam Al Azhar 20 Kembangan, Jakarta Barat</p>
                     <a href="${regionsData.jakarta.mapsLink}" target="_blank" style="display:inline-block; background:#3b82f6; color:#fff; padding:6px 12px; border-radius:6px; font-size:0.75rem; text-decoration:none; font-weight:700;">Buka Google Maps &rarr;</a>
                 </div>
