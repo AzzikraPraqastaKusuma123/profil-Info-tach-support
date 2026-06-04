@@ -629,8 +629,8 @@
                 subDistricts: ["Jatiasih", "Pondok Gede", "Cikarang", "Cibitung", "Tambun", "Bekasi Selatan", "Bekasi Barat", "Bekasi Timur", "Bekasi Utara"]
             },
             jakarta: {
-                title: "Kantor 2: Cabang DKI Jakarta",
-                badge: "CABANG JAKARTA BARAT",
+                title: "Project Office DKI Jakarta",
+                badge: "JAKARTA BARAT",
                 desc: "Kantor Cabang kami melayani jasa setup jaringan, maintenance komputer kantor, troubleshoot Mikrotik, setup firewall, setup VPS/dedicated server, serta pasang CCTV HD online untuk gedung perkantoran, ruko, pabrik, dan hunian di seluruh DKI Jakarta dan sekitarnya.",
                 address: "Komp. SMA Islam Al Azhar 20, Jl. H. Sa'aba No.25, RT.1/RW.3, Meruya Utara, Kec. Kembangan, Kota Jakarta Barat, DKI Jakarta 11620",
                 response: "< 45 Menit (Respons Sangat Cepat)",
