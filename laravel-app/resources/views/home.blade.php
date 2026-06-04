@@ -616,8 +616,8 @@
                 subDistricts: ["Jakarta", "Bekasi", "Bogor", "Depok", "Tangerang", "Cikarang", "BSD City", "Margonda", "Karawaci", "Jatiasih"]
             },
             bekasi: {
-                title: "Project Office",
-                badge: "KANTOR PUSAT BEKASI",
+                title: "Project Office Bekasi",
+                badge: "BEKASI",
                 desc: "Kantor Pusat kami di Bekasi Selatan siap menangani perbaikan hardware laptop/PC, instalasi jaringan fiber optic/LAN enterprise, setup & maintenance server kantor, Mikrotik routing, backup data, serta bantuan IT helpdesk siaga 24/7.",
                 address: "Jl.Durian Blok CR 6 Komp.Bumi Dirgantara Permai Jatiasih Jatisari Bekasi Selatan 17426, RT.004/RW.013, Jatisari, Kec. Jatiasih, Kota Bks, Jawa Barat 17426",
                 response: "< 30 Menit (Respon Prioritas Utama)",
